@@ -81,11 +81,6 @@ def homework_list_infomance(token,uid,class_id,subject_id):
         homework_list_name_list = homework_list_hid_list = None
         return code,homework_list_name_list,homework_list_hid_list
 
-code,token,uid,name = user_infotmance(18253450338, 'xiao123')
-class_name_list,class_id_list,class_subject_list = class_infomace(token)
-class_id = class_id_list[0]
-class_subject = class_subject_list[0]
-a = homework_list_infomance(token,uid,class_id,class_subject)
-print(a)
+
 
 
