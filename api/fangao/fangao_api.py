@@ -1,7 +1,7 @@
 import json
 import requests
 
-with open('C:\\Users\\25924\\homework-killer\\api\\fangao_api.json', 'r', encoding='utf-8') as file:
+with open('C:\\Users\\25924\\homework-killer\\api\\fangao\\fangao_api.json', 'r', encoding='utf-8') as file:
     data_json = json.load(file)
 
 def user_infotmance(user_number,user_password):
