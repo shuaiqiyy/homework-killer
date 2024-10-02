@@ -20,9 +20,7 @@ def login():
         log.user_login_infomance_log(user_number,user_password,uid,name,code,user_api)
         return code,token,uid,name
     else:
-        user_number = "11"
-        user_password = "11"
-        user_api = "fangao"
+        user_number,user_password,user_api = show.login(api_list)
         user_data = {
             'code': 0,
             'user_number': user_number,
@@ -32,5 +30,5 @@ def login():
         with open("user.json", "w", encoding="utf-8") as file:
             json.dump(user_data, file, ensure_ascii=False, indent=4)
         return login()
-    
-login()
+
+login()1
