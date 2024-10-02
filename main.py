@@ -57,5 +57,7 @@ def class_list():
 code,token,uid,name = login()
 if code == 1:
     login_clean()
+    show.msg("用户信息错误")
 elif code == 5:
     login_clean()
+    show.msg("插件错误")

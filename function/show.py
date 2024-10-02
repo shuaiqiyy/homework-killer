@@ -4,3 +4,6 @@ def login(api_list):
     user_password = input('请输入密码：')
     user_api = input('请输入api：')
     return user_number,user_password,user_api
+
+def msg(in_msg):
+    print(in_msg)
