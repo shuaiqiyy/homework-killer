@@ -31,4 +31,16 @@ def login():
             json.dump(user_data, file, ensure_ascii=False, indent=4)
         return login()
 
-login()
+def login_clean():
+    user_data = {
+        'code': '',
+        'user_number': '',
+        'user_password': '',
+        'api': '',
+    }
+    with open("user.json", "w", encoding="utf-8") as file:
+        json.dump(user_data, file, ensure_ascii=False, indent=4)
+    return login()
+
+
+code,token,uid,name = login()
