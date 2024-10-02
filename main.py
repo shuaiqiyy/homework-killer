@@ -8,6 +8,12 @@ import api.api_choose as api
 api_list = api.api_choose()
 log.examine_log()
 
+def have_user_api():
+    with open('user.json', 'r', encoding='utf-8') as file:
+        user_json = file.read()
+        user_api = json.loads(user_json)['api']
+        return user_api
+
 def login():
     with open('user.json', 'r', encoding='utf-8') as file:
         user_json = file.read()
@@ -42,5 +48,14 @@ def login_clean():
         json.dump(user_data, file, ensure_ascii=False, indent=4)
     return login()
 
+def class_list():
+    user_api = have_user_api()
+    code,class_name_list,class_id_list,class_subject_list = api.api_class_infomance(token,uid,user_api)
+    return code,class_name_list,class_id_list,class_subject_list
+
 
 code,token,uid,name = login()
+if code == 1:
+    login_clean()
+elif code == 5:
+    login_clean()

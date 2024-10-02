@@ -27,8 +27,8 @@ def api_class_infomance(token,uid,api):
         return xiaoxin.class_infomace(token)
     else:
         code = 5
-        token = uid = name = None
-        return code,token,uid,name
+        class_name_list = class_id_list = class_subject_list = None
+        return code,class_name_list,class_id_list,class_subject_list
 
 def api_homework_list_infomance(token,uid,class_id,subject_id,api):
     if api == 'fangao':
@@ -37,9 +37,8 @@ def api_homework_list_infomance(token,uid,class_id,subject_id,api):
         return xiaoxin.homework_list_infomance(token,uid,class_id,subject_id)
     else:
         code = 5
-        token = uid = name = None
-        return code,token,uid,name
-
+        homework_list_name_list = homework_list_hid_list = None
+        return code,homework_list_name_list,homework_list_hid_list
 def api_student_list_iformance(token,uid,hid,class_id,api):
     if api == 'fangao':
         return fangao.student_list_iformance(token,uid,hid,class_id)
@@ -47,5 +46,5 @@ def api_student_list_iformance(token,uid,hid,class_id,api):
         return xiaoxin.student_list_iformance(token,uid,hid,class_id)
     else:
         code = 5
-        token = uid = name = None
-        return code,token,uid,name
+        student_list_name_liat = student_list_id_list = None
+        return code,student_list_name_liat,student_list_id_list

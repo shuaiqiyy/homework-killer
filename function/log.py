@@ -32,14 +32,14 @@ def examine_log():
 
 def user_login_infomance_log(user_number,user_password,mid,name,msg,api):
     path = examine_log()
-    with open(path, 'a') as file:
+    with open(path, 'a',encoding='utf-8') as file:
         file.write("user_number:"+user_number)
         file.write("\n")
         file.write("user_password:"+user_password)
         file.write("\n")
         file.write("mid:"+str(mid))
         file.write("\n")
-        file.write("name:"+str(name))
+        file.write("name:"+name)
         file.write("\n")
         file.write("msg:"+str(msg))
         file.write("\n")
