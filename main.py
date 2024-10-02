@@ -1,8 +1,8 @@
 import os
-import log
+import function.log as log
 import json
-import show
-import update
+import function.show as show
+import function.update as update
 import api.api_choose as api
 
 api_list = api.api_choose()
@@ -31,4 +31,4 @@ def login():
             json.dump(user_data, file, ensure_ascii=False, indent=4)
         return login()
 
-login()1
+login()
