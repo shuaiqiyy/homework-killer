@@ -6,6 +6,12 @@ def new_log():
     with open(file_path, 'w') as file:
         file.write("time:"+time.strftime('%Y-%m-%d %H:%M:%S'))
         file.write("\n")
+        file.write("welcome homework_killer")
+        file.write("\n")
+        file.write("open killler")
+        file.write("\n")
+        file.write("****************************************")
+        file.write("\n")
     return (file_path)
 
 def examine_log():
@@ -15,12 +21,16 @@ def examine_log():
         with open(file_path, 'a') as file:
             file.write("time:"+time.strftime('%Y-%m-%d %H:%M:%S'))
             file.write("\n")
+            file.write("open killler")
+            file.write("\n")
+            file.write("****************************************")
+            file.write("\n")
         return (file_path)
     else:
         path = new_log()
         return path
 
-def user_login_infomance_log(user_number,user_password,mid,name,msg):
+def user_login_infomance_log(user_number,user_password,mid,name,msg,api):
     path = examine_log()
     with open(path, 'a') as file:
         file.write("user_number:"+user_number)
@@ -32,6 +42,8 @@ def user_login_infomance_log(user_number,user_password,mid,name,msg):
         file.write("name:"+str(name))
         file.write("\n")
         file.write("msg:"+str(msg))
+        file.write("\n")
+        file.write("api:"+str(api))
         file.write("\n")
         file.write("****************************************")
         file.write("\n")
