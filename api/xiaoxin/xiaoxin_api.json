@@ -3,6 +3,6 @@
     "url_class": "https://zuoyenew.xinkaoyun.com:30001/holidaywork/teacher/getTeacherClass",
     "url_subject": "https://zuoyenew.xinkaoyun.com:30001/holidaywork/teacher/getTeacherSubjects", 
     "url_homework_list": "https://zuoyenew.xinkaoyun.com:30001/holidaywork/teacher/getStudentTasks",
-    "url_student_list": "https://api.homework.100eks.com/teacher.homework.student",
-    "url_homework": "https://api.homework.100eks.com/teacher.homework.assessmentAnswer"
+    "url_student_list": "",
+    "url_homework": ""
 }
