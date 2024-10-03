@@ -1,7 +1,6 @@
 import os
 import json
 import requests
-import api.xiaoxin.homework_main
 
 requests.packages.urllib3.disable_warnings(
     requests.packages.urllib3.exceptions.InsecureRequestWarning)

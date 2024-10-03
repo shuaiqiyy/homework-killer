@@ -4,5 +4,6 @@
     "url_subject": "https://zuoyenew.xinkaoyun.com:30001/holidaywork/teacher/getTeacherSubjects", 
     "url_homework_list": "https://zuoyenew.xinkaoyun.com:30001/holidaywork/teacher/getStudentTasks",
     "url_student_list": "https://zuoyenew.xinkaoyun.com:30001/holidaywork/teacher/getStudentCorrectState",
-    "url_homework": "https://zuoyenew.xinkaoyun.com:30001/holidaywork/teacher/getStudentObjectiveAnswer"
+    "url_homework": "https://zuoyenew.xinkaoyun.com:30001/holidaywork/teacher/getStudentSubjectiveAnswer",
+    "url_homework_submit": "https://zuoyenew.xinkaoyun.com:30001/holidaywork/teacher/correctStudentTask"
 }

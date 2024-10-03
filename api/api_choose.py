@@ -1,6 +1,8 @@
 import os
 import api.fangao.fangao_api as fangao
 import api.xiaoxin.xiaoxin_api as xiaoxin
+import api.fangao.homework_main as homework_fangao
+import api.xiaoxin.homework_main as homework_xiaoxin
 
 def api_choose():
     path_api = os.getcwd() + "/api"
@@ -48,3 +50,23 @@ def api_student_list_iformance(token,uid,hid,class_id,api):
         code = 5
         student_list_name_liat = student_list_id_list = None
         return code,student_list_name_liat,student_list_id_list
+
+def api_homework_informance(token,taskid,sid,api):
+    if api == 'fangao':
+        return homework_fangao.homweork_informance(token,taskid,sid)
+    elif api == 'xiaoxin':
+        return homework_xiaoxin.homweork_informance(token,taskid,sid)
+    else:
+        code = 5
+        hight_grades = homwerk_img = teaid = None
+        return code,hight_grades,homwerk_img,teaid
+
+
+def api_homework_work(token,taskid,sid,teaid,hight,grades,api):
+    if api == 'fangao':
+        return homework_fangao.homework_work(token,taskid,sid,teaid,hight,grades)
+    elif api == 'xiaoxin':
+        return homework_xiaoxin.homework_work(token,taskid,sid,teaid,hight,grades)
+    else:
+        code = 5
+        return code
