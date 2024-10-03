@@ -54,8 +54,8 @@ def class_main():
     code,class_name_list,class_id_list,class_subject_list = api.api_class_infomance(token,uid,user_api)
     if code ==0:
         class_um = show.class_show(class_name_list)
-        class_id = class_id_list(class_um)
-        class_subject = class_subject_list(class_um)
+        class_id = class_id_list[class_um]
+        class_subject = class_subject_list[class_um]
         return class_id,class_subject
     else:
         msg = api_code.main(code)
@@ -66,7 +66,7 @@ def homework_main(class_id,subject_id):
     code,homework_list_name_list,homework_list_hid_list = api.api_homework_list_infomance(token,uid,class_id,subject_id,user_api)
     if code == 0:
         homework_um = show.class_show(homework_list_name_list)
-        hid = homework_list_hid_list(homework_um)
+        hid = homework_list_hid_list[homework_um]
         return hid
     else:
         msg = api_code.main(code)
@@ -75,20 +75,18 @@ def homework_main(class_id,subject_id):
 
 def homework_persistent(hid,class_id):
     code,student_list_name_liat,student_list_id_list,student_list_msg_list = api.api_student_list_iformance(token,uid,hid,class_id,user_api)
+    print(student_list_msg_list)
+    low_grades = int(input("请输入最低分："))
     if code == 0:
-        for stundent_um in student_list_id_list:
-            if student_list_msg_list(stundent_um) == '':
-                name = student_list_name_liat(stundent_um)
+        for stundent_um in range(len(student_list_id_list)):
+            if student_list_msg_list[stundent_um] == '待批改':
+                name = student_list_name_liat[stundent_um]
                 show.msg(name)
-                sid = student_list_id_list(stundent_um)
+                sid = student_list_id_list[stundent_um]
                 hight_grades,homwerk_img,teacherid = api.api_homework_informance(token,hid,sid,user_api)
-                low_grades = int(input("请输入最低分："))
                 grades = random_addon.main(hight_grades,low_grades,homwerk_img)
                 show.msg(grades)
-                api.api_homework_work(token,hid,sid,teacherid,grades,user_api)
-    else:
-        msg = api_code.main(code)
-        show.msg(msg)
+                api.api_homework_work(token,hid,sid,teacherid,hight_grades,grades,user_api)
 
 
 show.index()

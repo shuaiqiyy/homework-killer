@@ -32,10 +32,10 @@ def class_show(class_list):
     clear_screen()
     for i in range(len(class_list)):
         print(f'{i+1}.{class_list[i]}')
-        id = input('请输入班级序号：')
-        if id.isdigit() and int(id) <= len(class_list):
-            return int(id) - 1
-        else:
-            clear_screen()
-            msg('输入有误，请重新输入')
-            return class_show(class_list)
+    id = input('请输入班级序号：')
+    if id.isdigit() and int(id) <= len(class_list):
+        return int(id) - 1
+    else:
+        clear_screen()
+        msg('输入有误，请重新输入')
+        return class_show(class_list)

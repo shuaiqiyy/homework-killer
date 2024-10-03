@@ -103,10 +103,10 @@ def student_list_iformance(token,uid,taskid,classid):
     da_student_list = da_student_list['data']
     if msg == 'ok':
         code = 0
-        for  student_umb in da_student_list['student_list']:
+        for  student_umb in da_student_list:
             student_list_name_liat.append(student_umb['realName'])
             student_list_id_list.append(student_umb['userId'])
-            student_list_msg_list.append(student_umb['assessRealName'])
+            student_list_msg_list.append(student_umb['correctRealName'])
         return code,student_list_name_liat,student_list_id_list,student_list_msg_list
     else:
         code = 4
