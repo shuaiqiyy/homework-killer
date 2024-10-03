@@ -84,3 +84,31 @@ def homework_list_infomance(token,uid,class_id,subject_id):
         code = 3
         homework_list_name_list = homework_list_hid_list = None
         return code,homework_list_name_list,homework_list_hid_list
+
+def student_list_iformance(token,uid,taskid,classid):
+    url = data_json['url_student_list']
+    student_list_name_liat = []
+    student_list_id_list = []
+    student_list_msg_list = []
+    data_student_list = {
+        "page": 1,
+        "limit": 99999999,
+        "taskId": f"{taskid}",
+        "classId": f"{classid}",
+        "token": f"{token}"
+    }
+    r_student_list = requests.post(url,data=data_student_list, verify=False)
+    da_student_list = json.loads(r_student_list.text)
+    msg = da_student_list['state']
+    da_student_list = da_student_list['data']
+    if msg == 'ok':
+        code = 0
+        for  student_umb in da_student_list['student_list']:
+            student_list_name_liat.append(student_umb['realName'])
+            student_list_id_list.append(student_umb['userId'])
+            student_list_msg_list.append(student_umb['assessRealName'])
+        return code,student_list_name_liat,student_list_id_list,student_list_msg_list
+    else:
+        code = 4
+        student_list_name_liat = student_list_id_list = student_list_msg_list = None
+        return code,student_list_name_liat,student_list_id_list,student_list_msg_list
