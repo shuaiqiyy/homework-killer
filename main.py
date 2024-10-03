@@ -75,7 +75,6 @@ def homework_main(class_id,subject_id):
 
 def homework_persistent(hid,class_id):
     code,student_list_name_liat,student_list_id_list,student_list_msg_list = api.api_student_list_iformance(token,uid,hid,class_id,user_api)
-    print(student_list_msg_list)
     low_grades = int(input("请输入最低分："))
     if code == 0:
         for stundent_um in range(len(student_list_id_list)):
