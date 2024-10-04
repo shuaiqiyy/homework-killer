@@ -46,7 +46,7 @@ def login_clean():
         'user_password': '',
         'api': '',
     }
-    with open("user.json", "w", encoding="utf-8") as file:
+    with open("/user.json", "w", encoding="utf-8") as file:
         json.dump(user_data, file, ensure_ascii=False, indent=4)
     return login()
 
