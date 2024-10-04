@@ -11,7 +11,7 @@ api_list = api.api_choose()
 log.examine_log()
 
 def have_user_api():
-    with open('/user.json', 'r', encoding='utf-8') as file:
+    with open('\\user.json', 'r', encoding='utf-8') as file:
         user_json = file.read()
         user_api = json.loads(user_json)['api']
         return user_api
@@ -46,7 +46,7 @@ def login_clean():
         'user_password': '',
         'api': '',
     }
-    with open("/user.json", "w", encoding="utf-8") as file:
+    with open("\\user.json", "w", encoding="utf-8") as file:
         json.dump(user_data, file, ensure_ascii=False, indent=4)
     return login()
 

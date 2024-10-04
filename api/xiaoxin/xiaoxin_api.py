@@ -4,7 +4,7 @@ import requests
 
 requests.packages.urllib3.disable_warnings(
     requests.packages.urllib3.exceptions.InsecureRequestWarning)
-with open(os.getcwd() + '/api/xiaoxin/xiaoxin_api.json', 'r', encoding='utf-8') as file:
+with open(os.getcwd() + '\\api\\xiaoxin\\xiaoxin_api.json', 'r', encoding='utf-8') as file:
     data_json = json.load(file)
 def user_infotmance(user_number,user_password):
     user_number = int(user_number)

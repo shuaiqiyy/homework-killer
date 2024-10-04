@@ -4,7 +4,7 @@ import requests
 import api.fangao.homework_main
 
 requests.packages.urllib3.disable_warnings(requests.packages.urllib3.exceptions.InsecureRequestWarning)
-with open(os.getcwd() + '/api/fangao/fangao_api.json', 'r', encoding='utf-8') as file:
+with open(os.getcwd() + '\\api\\fangao\\fangao_api.json', 'r', encoding='utf-8') as file:
     data_json = json.load(file)
 
 def token_hear(token):
