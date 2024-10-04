@@ -14,13 +14,14 @@ def clear_screen():
 
 def index():
     clear_screen()
-    with open("cui/index.md",encoding='utf-8') as readme:
+    with open("./cui/index.md",encoding='utf-8') as readme:
         markdown = Markdown(readme.read())
     console.print(markdown)
 
 def login(api_list):
-    print(api_list)
-    user_number = input('请输入学号：')
+    for m in range(len(api_list) - 1):
+        print(f'{m+1}.{api_list[m]}')
+    user_number = input('请输入手机号：')
     user_password = input('请输入密码：')
     user_api = input('请输入api：')
     return user_number,user_password,user_api

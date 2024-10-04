@@ -4,7 +4,7 @@ import os
 
 requests.packages.urllib3.disable_warnings(
     requests.packages.urllib3.exceptions.InsecureRequestWarning)
-with open(os.getcwd() + 'maker.json', 'r', encoding='utf-8') as file:
+with open(os.getcwd() + '/maker.json', 'r', encoding='utf-8') as file:
     data_json = json.load(file)
 version = data_json['version']
 
