@@ -73,7 +73,7 @@ def homework_main(class_id,subject_id):
         show.msg(msg)
         return homework_main(class_id,subject_id)
 
-def homework_persistent(hid,class_id):
+def homework_persistent_xiaoxin(hid,class_id):
     code,student_list_name_liat,student_list_id_list,student_list_msg_list = api.api_student_list_iformance(token,uid,hid,class_id,user_api)
     low_grades = int(input("请输入最低分："))
     if code == 0:
@@ -90,11 +90,13 @@ def homework_persistent(hid,class_id):
 
 show.index()
 code,token,uid,name,user_api = login()
+msg_update = update.main()
+show.msg(msg_update)
 if code == 0:
-    show.msg("欢迎使用")
     class_id,class_subject = class_main()
     homework_id = homework_main(class_id,class_subject)
-    homework_persistent(homework_id,class_id)
+    if user_api == 'xiaoxin':
+        homework_persistent_xiaoxin(homework_id,class_id)
 elif code == 1:
     login_clean()
     show.msg("用户信息错误")
