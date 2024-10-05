@@ -2,7 +2,7 @@ import time
 import os
 def new_log():
     time_log = time.strftime('%Y-%m-%d')
-    file_path = (f'log\\' + time_log + '_log.txt')
+    file_path = (os.getcwd() + f'\\log\\' + time_log + '_log.txt')
     with open(file_path, 'w') as file:
         file.write("time:"+time.strftime('%Y-%m-%d %H:%M:%S'))
         file.write("\n")
@@ -16,7 +16,7 @@ def new_log():
 
 def examine_log():
     time_log = time.strftime('%Y-%m-%d')
-    file_path = (f'log\\' + time_log + '_log.txt')
+    file_path = (f'log/' + time_log + '_log.txt')
     if os.path.exists(file_path):
         with open(file_path, 'a') as file:
             file.write("time:"+time.strftime('%Y-%m-%d %H:%M:%S'))

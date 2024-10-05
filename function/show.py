@@ -14,7 +14,7 @@ def clear_screen():
 
 def index():
     clear_screen()
-    with open(".\\cui\\index.md",encoding='utf-8') as readme:
+    with open(os.getcwd() + "\\cui\\index.md",encoding='utf-8') as readme:
         markdown = Markdown(readme.read())
     console.print(markdown)
 
