@@ -75,7 +75,7 @@ def homework_main(class_id,subject_id):
 
 def homework_persistent_xiaoxin(hid,class_id):
     code,student_list_name_liat,student_list_id_list,student_list_msg_list = api.api_student_list_iformance(token,uid,hid,class_id,user_api)
-    low_grades = int(input("请输入最低分："))
+    grades_less = int(input("请输入分差："))
     if code == 0:
         for stundent_um in range(len(student_list_id_list)):
             if student_list_msg_list[stundent_um] == '待批改':
@@ -83,15 +83,16 @@ def homework_persistent_xiaoxin(hid,class_id):
                 show.msg(name)
                 sid = student_list_id_list[stundent_um]
                 hight_grades,homwerk_img,teacherid = api.api_homework_informance(token,hid,sid,user_api)
-                grades = random_addon.main(hight_grades,low_grades,homwerk_img)
+                grades = random_addon.main(hight_grades,grades_less,homwerk_img)
                 show.msg(grades)
                 api.api_homework_work(token,hid,sid,teacherid,hight_grades,grades,user_api)
 
-
-show.index()
-code,token,uid,name,user_api = login()
 msg_update = update.main()
+show.index()
 show.msg(msg_update)
+code,token,uid,name,user_api = login()
+show.msg("用户姓名：" + name)
+show.msg("api：" + user_api)
 if code == 0:
     class_id,class_subject = class_main()
     homework_id = homework_main(class_id,class_subject)

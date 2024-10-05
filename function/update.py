@@ -12,7 +12,10 @@ def main():
     url = "https://api.github.com/repos/shuaiqiyy/homework-killer/releases/latest"
     r = requests.get(url)
     json_data = json.loads(r.text)
-    if json_data['tag_name'] == version:
+    if json_data['message'] == "Not Found":
+        msg = "无法连接github服务器"
+        return msg
+    elif json_data['tag_name'] == version:
         msg = "当前版本为最新版本"
         return msg
     else:
