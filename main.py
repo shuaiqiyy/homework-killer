@@ -1,106 +1,98 @@
-import os
-import function.log as log
+import flet as ft
+#import homework
 import json
-import function.code as api_code
-import function.show as show
-import function.random_addon as random_addon
-import function.update as update
-import api.api_choose as api
 
-api_list = api.api_choose()
-log.examine_log()
+class_list = []
 
-def have_user_api():
-    with open('\\user.json', 'r', encoding='utf-8') as file:
-        user_json = file.read()
-        user_api = json.loads(user_json)['api']
-        return user_api
-
-def login():
-    with open('user.json', 'r', encoding='utf-8') as file:
+with open('user.json', 'r', encoding='utf-8') as file:
         user_json = file.read()
         code = json.loads(user_json)['code']
-    if code == 0:
-        user_number = json.loads(user_json)['user_number']
-        user_password = json.loads(user_json)['user_password']
-        user_api = json.loads(user_json)['api']
-        code,token,uid,name = api.api_user_infotmance(user_number,user_password,user_api)
-        log.user_login_infomance_log(user_number,user_password,uid,name,code,user_api)
-        return code,token,uid,name,user_api
-    else:
-        user_number,user_password,user_api = show.login(api_list)
-        user_data = {
-            'code': 0,
-            'user_number': user_number,
-            'user_password': user_password,
-            'api': user_api,
-        }
-        with open("user.json", "w", encoding="utf-8") as file:
-            json.dump(user_data, file, ensure_ascii=False, indent=4)
-        return login()
 
-def login_clean():
-    user_data = {
-        'code': '',
-        'user_number': '',
-        'user_password': '',
-        'api': '',
-    }
-    with open("\\user.json", "w", encoding="utf-8") as file:
-        json.dump(user_data, file, ensure_ascii=False, indent=4)
-    return login()
+def main(page: ft.Page):
+    def handle_close(e):
+        page.close(dlg_modal)
+    dlg_modal = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("警告"),
+        content=ft.Text("请先进行账号认证！！！"),
+        actions=[
+            ft.TextButton("好的", on_click=handle_close),
+        ],
+        actions_alignment=ft.MainAxisAlignment.END,
+    )
 
-def class_main():
-    code,class_name_list,class_id_list,class_subject_list = api.api_class_infomance(token,uid,user_api)
-    if code ==0:
-        class_um = show.class_show(class_name_list)
-        class_id = class_id_list[class_um]
-        class_subject = class_subject_list[class_um]
-        return class_id,class_subject
-    else:
-        msg = api_code.main(code)
-        show.msg(msg)
-        return class_main()
+    def on_rail_change(e):
+        if e.control.selected_index == 0:
+            content_column.controls = [
+                ft.Text("Home"),
+            ]
+        elif e.control.selected_index == 1:
+            if class_list == []:
+                page.open(dlg_modal)
+            tabs = ft.Tabs(
+                selected_index=1,
+                animation_duration=300,
+                tabs=[
+                    ft.Tab(
+                        text=class_name,
+                        content=ft.Container()
+                    ) for class_name in class_list
+                ],
+                on_change=on_tab_change
+            )
+            content_column.controls = [tabs]
+        elif e.control.selected_index == 2:
+            if code == 0:
+                #name = homework.login()
+                page_login = [
+                    ft.Text("账号认证"),
+                    ft.Text(0),
+                ]
+            else:
+                page_login = [
+                    ft.Text("账号认证"),
+                    ft.FilledButton("添加用户信息", icon="add"),
+                ]
+            content_column.controls = page_login
+        page.update()
+    
+    def on_tab_change(e):
+        selected_index = int(e.data)
+        class_id = selected_index
+        print(class_id)
 
-def homework_main(class_id,subject_id):
-    code,homework_list_name_list,homework_list_hid_list = api.api_homework_list_infomance(token,uid,class_id,subject_id,user_api)
-    if code == 0:
-        homework_um = show.class_show(homework_list_name_list)
-        hid = homework_list_hid_list[homework_um]
-        return hid
-    else:
-        msg = api_code.main(code)
-        show.msg(msg)
-        return homework_main(class_id,subject_id)
-
-def homework_persistent_xiaoxin(hid,class_id):
-    code,student_list_name_liat,student_list_id_list,student_list_msg_list = api.api_student_list_iformance(token,uid,hid,class_id,user_api)
-    grades_less = int(input("请输入分差："))
-    if code == 0:
-        for stundent_um in range(len(student_list_id_list)):
-            if student_list_msg_list[stundent_um] == '待批改':
-                name = student_list_name_liat[stundent_um]
-                show.msg(name)
-                sid = student_list_id_list[stundent_um]
-                hight_grades,homwerk_img,teacherid = api.api_homework_informance(token,hid,sid,user_api)
-                grades = random_addon.main(hight_grades,grades_less,homwerk_img)
-                show.msg(grades)
-                api.api_homework_work(token,hid,sid,teacherid,hight_grades,grades,user_api)
-
-msg_update = update.main()
-show.index()
-show.msg(msg_update)
-code,token,uid,name,user_api = login()
-show.msg("用户姓名：" + name)
-show.msg("api：" + user_api)
-if code == 0:
-    class_id,class_subject = class_main()
-    homework_id = homework_main(class_id,class_subject)
-    if user_api == 'xiaoxin':
-        homework_persistent_xiaoxin(homework_id,class_id)
-elif code == 1:
-    login_clean()
-    show.msg("用户信息错误")
-elif code == 5:
-    login_clean()
-    show.msg("插件错误")
+    rail = ft.NavigationRail(
+        selected_index=0,
+        label_type=ft.NavigationRailLabelType.ALL,
+        min_width=100,
+        min_extended_width=400,
+        expand=False, 
+        destinations=[
+            ft.NavigationRailDestination(
+                icon=ft.icons.HOME_OUTLINED, selected_icon=ft.icons.HOME_SHARP, label="主页"
+            ),
+            ft.NavigationRailDestination(
+                icon_content=ft.Icon(ft.icons.BOOKMARK_BORDER),
+                selected_icon_content=ft.Icon(ft.icons.BOOKMARK),
+                label="班级",
+            ),
+            ft.NavigationRailDestination(
+                icon=ft.icons.SETTINGS_OUTLINED,
+                selected_icon_content=ft.Icon(ft.icons.SETTINGS),
+                label_content=ft.Text("设置"),
+            ),
+        ],
+        on_change=on_rail_change,
+    )
+    content_column = ft.Column(expand=True)
+    page.add(
+        ft.Row(
+            [
+                rail,
+                ft.VerticalDivider(width=1),
+                content_column
+            ],
+            expand=True,
+        )
+    )
+ft.app(target=main)
