@@ -14,21 +14,23 @@ headers = {
     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
 }
 
-def homweork_informance(token,taskid,sid):
+def homweork_informance(token,taskid,sid,user_id):
     homweork_informance_url = data_json['url_homework']
+    hight_grades = []
     homwerk_img = []
-    data_homwork = (
+    teaid = []
+    data_homework = (
         'taskId={taskid}&userId={sid}&token={token}'
     ).format(taskid=taskid,sid=sid,token=token)
-    r_homwork = requests.post(homweork_informance_url,data=data_homwork,headers=headers, verify=False)
+    r_homwork = requests.post(homweork_informance_url,data=data_homework,headers=headers, verify=False)
     da_homwork = json.loads(r_homwork.text)
     msg = da_homwork['state']
     da_homwork = da_homwork['answers']
     da_homwork = da_homwork[0]
     if msg == 'ok':
-        hight_grades = da_homwork['teaScore']
-        homwerk_img = da_homwork['images']
-        teaid = da_homwork['teaId']
+        hight_grades.append(da_homwork['teaScore'])
+        homwerk_img.append(da_homwork['images'])
+        teaid.append(da_homwork['teaId'])
         return hight_grades,homwerk_img,teaid
     else:
         hight_grades = homwerk_img = teaid = None

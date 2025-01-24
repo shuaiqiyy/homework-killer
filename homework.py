@@ -10,6 +10,7 @@ import api.api_choose as api
 api_list = api.api_choose()
 log.examine_log()
 
+
 def have_user_api():
     with open('\\user.json', 'r', encoding='utf-8') as file:
         user_json = file.read()
