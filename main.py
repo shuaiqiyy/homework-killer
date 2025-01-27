@@ -1,13 +1,14 @@
-import flet as ft
 import os
-import function.log as log
 import json
-import function.code as api_code
-import function.update as update
+import flet as ft
+import function.log as log
 import api.api_choose as api
+import function.update as update
+import function.code as api_code
+import function.random_addon as random_addon
 
 class_list = []
-api_list = ["fangao","xiaoxin"]
+api_list = api.api_choose()
 
 md_index = """
 # Homework  Killer
@@ -17,7 +18,7 @@ md_index = """
 ###   ⭐⭐⭐希望大家多多支持开发者⭐⭐⭐
 ### ⭐⭐⭐希望大家可以多多为我点star⭐⭐⭐
 ``` 此产品为爱发电，所有收费均是骗子！！！ ```
-> 版本 vben v1.0.0
+> 版本 v1.0.0
 > 检查更新请前往GitHub页
 """
 
@@ -43,8 +44,23 @@ def login():
     with open("user.json", "w", encoding="utf-8") as file:
             json.dump(user_data, file, ensure_ascii=False, indent=4)
 
-#if json.loads(user_json)['code'] == 0:
-#    login()
+def woker_main(hid,class_id,grades_less):
+    token = json.loads(user_json)['user_token']
+    uid = json.loads(user_json)['user_uid']
+    user_api = json.loads(user_json)['api']
+    grades = []
+    code,student_list_name_liat,student_list_id_list,student_list_msg_list = api.api_student_list_iformance(token,uid,hid,class_id,user_api)
+    if code == 0:
+        for stundent_um in range(len(student_list_id_list)):
+            if student_list_msg_list[stundent_um] == '待批改':
+                sid = student_list_id_list[stundent_um]
+                hight_grades,homwerk_img,teacherid = api.api_homework_informance(token,hid,sid,user_api)
+                for qu_um in range(len(hight_grades)):
+                    grades_h = hight_grades[qu_um]
+                    teac_id = teacherid[qu_um]
+                    grade = random_addon.main(grades_h,grades_less,homwerk_img)
+                    grades.append(grade)
+                api.api_homework_work(token,hid,sid,teac_id,hight_grades,grades,user_api)
 
 def main(page: ft.Page):
     def error_notuser_close(e):
@@ -151,7 +167,6 @@ def main(page: ft.Page):
                                 ft.FilledButton(
                                     "一键阅卷", 
                                     on_click=lambda e, name=homework_name: on_work_click(e, name), 
-                                    disabled=False
                                     )
                             )
                         ],
