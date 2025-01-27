@@ -9,6 +9,18 @@ import api.api_choose as api
 class_list = []
 api_list = ["fangao","xiaoxin"]
 
+md_index = """
+# Homework  Killer
+![](./logo.png)
+## Maker : shuaiqiyy
+## GitHub : https://github.com/shuaiqiyy/Homework-Killer
+###   ⭐⭐⭐希望大家多多支持开发者⭐⭐⭐
+### ⭐⭐⭐希望大家可以多多为我点star⭐⭐⭐
+``` 此产品为爱发电，所有收费均是骗子！！！ ```
+> 版本 vben v1.0.0
+> 检查更新请前往GitHub页
+"""
+
 with open('user.json', 'r', encoding='utf-8') as file:
         user_json = file.read()
         code = json.loads(user_json)['code']
@@ -155,12 +167,11 @@ def main(page: ft.Page):
         tabs = None 
         if e.control.selected_index == 0:
             content_column.controls = [
-                ft.Text("Home"),
-                ft.Image(
-                    src="../logo.png",
-                    width=300,
-                    height=200,
-                    fit=ft.ImageFit.CONTAIN
+                ft.Markdown(
+                    md_index,
+                    selectable=True,
+                    extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
+                    on_tap_link=lambda e: page.launch_url(e.data),
                 )
             ]
         elif e.control.selected_index == 1:

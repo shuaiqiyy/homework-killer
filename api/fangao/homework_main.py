@@ -60,5 +60,4 @@ def homework_work(token,taskid,sid,teaid,hight,grades):
             '{{"mid":{uid},"hid":{hid},"student_mid":{sid},"score":{score},"answer":{answer}}}'.format(hid=str(taskid),sid=sid)
     }
 
-a = homework_informance("6sCKs9MxeGyu1oJaOJjSC5bSKPMRwXq16q37nDydUzU",'963',"81158582","81522472")
-homework_work("6sCKs9MxeGyu1oJaOJjSC5bSKPMRwXq16q37nDydUzU",['369796413','369796414'],"81158582","81522472",'1',['25','15'])
+##homework_work("6sCKs9MxeGyu1oJaOJjSC5bSKPMRwXq16q37nDydUzU",['369796413','369796414'],"81158582","81522472",'1',['25','15'])
