@@ -3,7 +3,6 @@ import os
 import function.log as log
 import json
 import function.code as api_code
-import function.random_addon as random_addon
 import function.update as update
 import api.api_choose as api
 
@@ -31,6 +30,9 @@ def login():
         }
     with open("user.json", "w", encoding="utf-8") as file:
             json.dump(user_data, file, ensure_ascii=False, indent=4)
+
+#if json.loads(user_json)['code'] == 0:
+#    login()
 
 def main(page: ft.Page):
     def error_notuser_close(e):
@@ -108,10 +110,58 @@ def main(page: ft.Page):
         actions_alignment=ft.MainAxisAlignment.END,
         )
 
+    def on_class_change(e):
+        token = json.loads(user_json)['user_token']
+        uid = json.loads(user_json)['user_uid']
+        user_api = json.loads(user_json)['api']
+        code_class, class_list, class_id_list, class_subject_list = api.api_class_infomance(token, uid, user_api)
+        selected_index = int(e.data)
+        class_um = selected_index
+        class_id = class_id_list[class_um]
+        subject_id = class_subject_list[class_um]
+        code,homework_name_list, homework_id_list = api.api_homework_list_infomance(token, uid, class_id, subject_id, user_api)
+        selected_tab_index = e.control.selected_index
+        selected_tab = e.control.tabs[selected_tab_index]
+        def on_work_click(e, homework_name):
+            print(f"开始阅卷: {homework_name}")
+
+        tab_content = ft.Container(
+            ft.DataTable(
+                columns=[
+                    ft.DataColumn(ft.Text("作业标题")),
+                    ft.DataColumn(ft.Text("一键阅卷"))
+                ],
+                rows=[
+                    ft.DataRow(
+                        cells=[
+                            ft.DataCell(ft.Text(homework_name)),
+                            ft.DataCell(
+                                ft.FilledButton(
+                                    "一键阅卷", 
+                                    on_click=lambda e, name=homework_name: on_work_click(e, name), 
+                                    disabled=False
+                                    )
+                            )
+                        ],
+                    ) for row_index, homework_name in enumerate(homework_name_list)
+                ],
+            ),
+        )
+        selected_tab.content = tab_content
+        e.control.update()
+
     def on_rail_change(e):
+        global tabs
+        tabs = None 
         if e.control.selected_index == 0:
             content_column.controls = [
                 ft.Text("Home"),
+                ft.Image(
+                    src="../logo.png",
+                    width=300,
+                    height=200,
+                    fit=ft.ImageFit.CONTAIN
+                )
             ]
         elif e.control.selected_index == 1:
             if code == 1:
@@ -132,9 +182,9 @@ def main(page: ft.Page):
                             content=ft.Container()
                         ) for class_name in class_list
                     ],
-                    on_change=on_tab_change
+                    on_change=on_class_change
                 )
-                content_column.controls = [tabs]
+                content_column.controls = [tabs] if tabs else []
         elif e.control.selected_index == 2:
             if code == 0:
                 code_user_login = json.loads(user_json)['code']
@@ -154,11 +204,6 @@ def main(page: ft.Page):
                 ]
             content_column.controls = page_login
         page.update()
-    
-    def on_tab_change(e):
-        selected_index = int(e.data)
-        class_id = selected_index
-        print(class_id)
 
     rail = ft.NavigationRail(
         selected_index=0,

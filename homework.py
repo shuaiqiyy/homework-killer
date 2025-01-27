@@ -7,8 +7,8 @@ import function.random_addon as random_addon
 import function.update as update
 import api.api_choose as api
 
-api_list = api.api_choose()
-log.examine_log()
+#api_list = api.api_choose()
+#log.examine_log()
 
 
 def have_user_api():

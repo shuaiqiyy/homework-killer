@@ -3,5 +3,6 @@
     "url_class": "https://api.homework.100eks.com/teacher.homework.subject",
     "url_homework_list": "https://api.homework.100eks.com/teacher.homework.list",
     "url_student_list": "https://api.homework.100eks.com/teacher.homework.student",
-    "url_homework": "https://api.homework.100eks.com/teacher.homework.assessmentAnswer"
+    "url_homework": "https://api.homework.100eks.com/teacher.homework.assessmentAnswer",
+    "url_homework_work": "https://api.homework.100eks.com/teacher.homework.submitSubjectItem"
 }

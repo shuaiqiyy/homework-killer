@@ -14,7 +14,7 @@ def token_hear(token):
 
 def user_infotmance(user_number,user_password):
     user_number = int(user_number)
-    user_password = int(user_password)
+    user_password = str(user_password)
     url_login = data_json['url_login']
     data_login = {
         'request': '{{"mobile":"{user_number}","password":"{user_password}"}}'.format(

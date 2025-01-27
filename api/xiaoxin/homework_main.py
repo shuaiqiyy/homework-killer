@@ -37,9 +37,9 @@ def homweork_informance(token,taskid,sid,user_id):
         return hight_grades,homwerk_img,teaid
 
 def homework_work(token,taskid,sid,teaid,hight,grades):
-    teaid = str(teaid)
-    hight = str(hight)
-    grades = str(grades)
+    teaid = str(teaid[0])
+    hight = str(hight[0])
+    grades = str(grades[0])
     url_homework_work = data_json['url_homework_submit']
     taskscore = teaid + '-' + grades + '-' + hight
     data_homework_work = (
