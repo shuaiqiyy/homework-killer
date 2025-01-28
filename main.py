@@ -107,15 +107,18 @@ def main(page: ft.Page):
         user_number = phone_field.value
         user_password = password_field.value
         user_api = api_dropdown.value
-        user_data = {
-            'code': 0,
-            'user_number': user_number,
-            'user_password': user_password,
-            'api': user_api,
-        }
-        with open("user.json", "w", encoding="utf-8") as file:
-            json.dump(user_data, file, ensure_ascii=False, indent=4)
-        login()
+        if user_number == "" or user_password == "":
+            page.open(error_notuser)
+        else:
+            user_data = {
+                'code': 0,
+                'user_number': user_number,
+                'user_password': user_password,
+                'api': user_api,
+            }
+            with open("user.json", "w", encoding="utf-8") as file:
+                json.dump(user_data, file, ensure_ascii=False, indent=4)
+            login()
 
     def login_clean(e):
         user_data = {
