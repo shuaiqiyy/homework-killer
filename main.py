@@ -49,7 +49,7 @@ def woker_main(hid,class_id,grades_less):
     uid = json.loads(user_json)['user_uid']
     user_api = json.loads(user_json)['api']
     grades = []
-    code,student_list_name_liat,student_list_id_list,student_list_msg_list = api.api_student_list_iformance(token,uid,hid,class_id,user_api)
+    code,student_list_name_list,student_list_id_list,student_list_msg_list = api.api_student_list_iformance(token,uid,hid,class_id,user_api)
     if code == 0:
         for stundent_um in range(len(student_list_id_list)):
             if student_list_msg_list[stundent_um] == '待批改':
@@ -62,7 +62,20 @@ def woker_main(hid,class_id,grades_less):
                     grades.append(grade)
                 api.api_homework_work(token,hid,sid,teac_id,hight_grades,grades,user_api)
 
+
+class Page:
+    def __init__(self, ft_page):
+        self.ft_page = ft_page
+        self.student_list_name_list = []
+        self.student_list_msg_list = []
+
+global_custom_page = None
 def main(page: ft.Page):
+    global global_custom_page
+    global_custom_page = Page(page)
+
+    page.title = "Homework Killer"
+
     def error_notuser_close(e):
         page.close(error_notuser),
     def error_notnet_close(e):
@@ -150,29 +163,75 @@ def main(page: ft.Page):
         code,homework_name_list, homework_id_list = api.api_homework_list_infomance(token, uid, class_id, subject_id, user_api)
         selected_tab_index = e.control.selected_index
         selected_tab = e.control.tabs[selected_tab_index]
-        def on_work_click(e, homework_name):
-            print(f"开始阅卷: {homework_name}")
+        def on_work_click(e, home_um):
+            token = json.loads(user_json)['user_token']
+            uid = json.loads(user_json)['user_uid']
+            user_api = json.loads(user_json)['api']
+            code, homework_name_list, homework_id_list = api.api_homework_list_infomance(token, uid, class_id, subject_id, user_api)
+            homework_id = homework_id_list[home_um]
+            code, student_list_name_list, student_list_id_list, student_list_msg_list = api.api_student_list_iformance(token, uid, homework_id, class_id, user_api)
+            global_custom_page.student_list_name_list = student_list_name_list
+            global_custom_page.student_list_msg_list = student_list_msg_list
+            grades_less_slider = ft.Slider(min=0, max=10, divisions=10, label="{value}")
+            work_page = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("学生列表"),
+                content=ft.Column(
+                    [
+                        ft.Column(
+                            [
+                                ft.FilledButton("开始", on_click=lambda e: woker_main(homework_id, class_id, grades_less_slider.value)),
+                                ft.Text("分差："),
+                                grades_less_slider,
+                            ]
+                        ),
+                        ft.DataTable(
+                            columns=[
+                                ft.DataColumn(ft.Text("学生姓名")),
+                                ft.DataColumn(ft.Text("状态"))
+                            ],
+                            rows=[
+                                ft.DataRow(
+                                    cells=[
+                                        ft.DataCell(ft.Text(student_name)),
+                                        ft.DataCell(ft.Text(student_msg)),
+                                    ],
+                                ) for student_name, student_msg in zip(global_custom_page.student_list_name_list,
+                                                                        global_custom_page.student_list_msg_list)
+                            ]
+                        ),
+                    ]
+                ),
+                actions_alignment=ft.MainAxisAlignment.END,
+            )
+            page.open(work_page)
+            page.update()
+
 
         tab_content = ft.Container(
-            ft.DataTable(
-                columns=[
-                    ft.DataColumn(ft.Text("作业标题")),
-                    ft.DataColumn(ft.Text("一键阅卷"))
-                ],
-                rows=[
-                    ft.DataRow(
-                        cells=[
-                            ft.DataCell(ft.Text(homework_name)),
-                            ft.DataCell(
-                                ft.FilledButton(
-                                    "一键阅卷", 
-                                    on_click=lambda e, name=homework_name: on_work_click(e, name), 
-                                    )
-                            )
+            ft.Column(
+                [
+                    ft.DataTable(
+                        columns=[
+                            ft.DataColumn(ft.Text("作业标题")),
+                            ft.DataColumn(ft.Text("一键阅卷"))
                         ],
-                    ) for row_index, homework_name in enumerate(homework_name_list)
-                ],
-            ),
+                        rows=[
+                            ft.DataRow(
+                                cells=[
+                                    ft.DataCell(ft.Text(homework_name)),
+                                    ft.DataCell(
+                                        ft.FilledButton(
+                                            "一键阅卷", 
+                                            on_click=lambda e, home_um=home_um: on_work_click(e, home_um), 
+                                            )
+                                    )
+                                ],
+                            ) for home_um, homework_name in enumerate(homework_name_list)
+                        ],
+                    ),
+                ]
+            )
         )
         selected_tab.content = tab_content
         e.control.update()
@@ -193,7 +252,6 @@ def main(page: ft.Page):
             if code == 1:
                 page.open(error_notuser)
             else:
-                code_user_login = json.loads(user_json)['code']
                 token = json.loads(user_json)['user_token']
                 uid = json.loads(user_json)['user_uid']
                 name = json.loads(user_json)['user_name']

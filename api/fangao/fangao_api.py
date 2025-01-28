@@ -94,7 +94,7 @@ def student_list_iformance(token,uid,hid,class_id):
     student_list_id_list = []
     student_list_msg_list = []
     data_student_list = {
-    'request': '{{"mid":{uid},"type":2,"class_id":{classid},"hid":{hid}}}'.format(
+    'request': '{{"mid":{uid},"type":1,"class_id":{classid},"hid":{hid}}}'.format(
         uid=uid,classid=class_id,hid=hid)
     }
     r_student_list = requests.post(url_student_list,data=data_student_list, headers=hear, verify=False)
@@ -108,6 +108,8 @@ def student_list_iformance(token,uid,hid,class_id):
             student_list_id_list.append(student_umb['mid'])
             if student_umb['checker_name'] == "":
                 student_list_msg_list.append("未批改")
+            else:
+                student_list_msg_list.append("已批改")
         return code,student_list_name_liat,student_list_id_list,student_list_msg_list
     else:
         code = 4
