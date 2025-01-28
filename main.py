@@ -1,10 +1,8 @@
-import os
 import json
 import flet as ft
 import function.log as log
 import api.api_choose as api
 import function.update as update
-import function.code as api_code
 import function.random_addon as random_addon
 
 class_list = []
@@ -61,7 +59,6 @@ def woker_main(hid,class_id,grades_less):
                     grade = random_addon.main(grades_h,grades_less,homwerk_img)
                     grades.append(grade)
                 api.api_homework_work(token,hid,sid,teac_id,hight_grades,grades,user_api)
-
 
 class Page:
     def __init__(self, ft_page):
@@ -279,7 +276,8 @@ def main(page: ft.Page):
                 page_login = [
                     ft.Text("账号认证"),
                     ft.Text(name),
-                    ft.FilledButton("清除信息",on_click=login_clean)
+                    ft.FilledButton("清除信息",on_click=login_clean),
+                    ft.FilledButton("更新登录信息",on_click=login),
                 ]
             else:
                 page_login = [

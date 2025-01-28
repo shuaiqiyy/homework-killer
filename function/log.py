@@ -1,5 +1,6 @@
-import time
 import os
+import time
+
 def new_log():
     time_log = time.strftime('%Y-%m-%d')
     file_path = (os.getcwd() + f'\\log\\' + time_log + '_log.txt')
