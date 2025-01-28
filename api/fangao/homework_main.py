@@ -72,5 +72,3 @@ def homework_work(token, taskid, sid, teaid, hight, grades):
     r_homework_work = requests.post(url=homweork_informance_url, data=data_sumbit, headers=headers, verify=False)
     directory_path = os.getcwd() + '\\api\\fangao\\sumbit'
     delete_files_in_directory(directory_path)
-
-homework_work("6sCKs9MxeGyu1oJaOJjSC5bSKPMRwXq16q37nDydUzU", ['369796413', '369796414'], "81158582", "81522472", '1', ['25', '15'])
