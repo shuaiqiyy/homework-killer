@@ -39,7 +39,6 @@ def homework_informance(token,taskid,sid,user_id):
     return hight_grades,homwerk_img,teaid
 
 def homework_work(token, taskid, sid, teaid, hight, grades):
-    score = 1
     headers = {
         'token': token
     }
@@ -52,12 +51,26 @@ def homework_work(token, taskid, sid, teaid, hight, grades):
         grade = grades[homwerk_um]
         sumbit_json['score'] = grade
         sumbit_list.append(sumbit_json)
-
+    score = max(grades)
     answer_content = sumbit_list
     answer = {
         "answer_content": answer_content,
         "teacher_comment": ""
     }
+    url_time = data_json['url_time']
+    data_time = {
+        'request':{
+            "mid": sumbit_list[0]['mid'],
+            "hid": taskid,
+            "student_mid": sid,
+            "type":1
+        }
+    }
+    r_time = requests.post(url=url_time, data=data_time, headers=headers, verify=False)
+    da_time = json.loads(r_time.text)
+    time = da_time['data']['time']
+    checker_start = time
+    checker_end = str(int(time) + 1000000)
     data_sumbit = {
         'request': {
             "mid": sumbit_list[0]['mid'],
@@ -65,8 +78,8 @@ def homework_work(token, taskid, sid, teaid, hight, grades):
             "student_mid": sid,
             "score": score,
             "answer": answer,
-            "checker_start": "1737965848228",
-            "checker_end": "1737966103090"
+            "checker_start": checker_start,
+            "checker_end": checker_end
         }
     }
     r_homework_work = requests.post(url=homweork_informance_url, data=data_sumbit, headers=headers, verify=False)
