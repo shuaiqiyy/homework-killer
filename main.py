@@ -30,7 +30,12 @@ def login():
     user_api = json.loads(user_json)['api']
     code,token,uid,name = api.api_user_infotmance(user_number,user_password,user_api)
     log.user_login_infomance_log(user_number,user_password,uid,name,code,user_api)
-    user_data = {
+    if code == 1:
+        user_data = {
+            'code': 1,
+        }
+    else:
+        user_data = {
             'code': 0,
             'user_number': user_number,
             'user_password': user_password,
