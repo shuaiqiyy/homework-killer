@@ -51,9 +51,9 @@ def api_student_list_iformance(token,uid,hid,class_id,api):
         student_list_name_liat = student_list_id_list = None
         return code,student_list_name_liat,student_list_id_list
 
-def api_homework_informance(token,taskid,sid,api):
+def api_homework_informance(token,taskid,sid,uid,api):
     if api == 'fangao':
-        return homework_fangao.homweork_informance(token,taskid,sid)
+        return homework_fangao.homweork_informance(token,taskid,sid,uid)
     elif api == 'xiaoxin':
         return homework_xiaoxin.homweork_informance(token,taskid,sid)
     else:

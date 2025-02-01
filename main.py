@@ -57,13 +57,12 @@ def woker_main(hid,class_id,grades_less):
         for stundent_um in range(len(student_list_id_list)):
             if student_list_msg_list[stundent_um] == '待批改':
                 sid = student_list_id_list[stundent_um]
-                hight_grades,homwerk_img,teacherid = api.api_homework_informance(token,hid,sid,user_api)
+                hight_grades,homwerk_img,teacherid = api.api_homework_informance(token,hid,sid,uid,user_api)
                 for qu_um in range(len(hight_grades)):
                     grades_h = hight_grades[qu_um]
-                    teac_id = teacherid[qu_um]
                     grade = random_addon.main(grades_h,grades_less,homwerk_img)
                     grades.append(grade)
-                api.api_homework_work(token,hid,sid,teac_id,hight_grades,grades,user_api)
+                api.api_homework_work(token,hid,sid,teacherid,hight_grades,grades,user_api)
 
 class Page:
     def __init__(self, ft_page):

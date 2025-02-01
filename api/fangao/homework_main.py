@@ -1,5 +1,6 @@
 import os
 import json
+import time
 import requests
 
 requests.packages.urllib3.disable_warnings(
@@ -13,7 +14,7 @@ def delete_files_in_directory(directory):
         if os.path.isfile(file_path):
             os.unlink(file_path)
 
-def homework_informance(token,taskid,sid,user_id):
+def homweork_informance(token,taskid,sid,user_id):
     hight_grades = []
     homwerk_img = []
     teaid = []
@@ -38,7 +39,8 @@ def homework_informance(token,taskid,sid,user_id):
             teaid.append(said)
     return hight_grades,homwerk_img,teaid
 
-def homework_work(token, taskid, sid, teaid, hight, grades):
+def homework_work(token, teaid, sid, taskid, hight, grades):
+    checker_start = int(time.time())
     headers = {
         'token': token
     }
@@ -49,39 +51,17 @@ def homework_work(token, taskid, sid, teaid, hight, grades):
         with open(os.getcwd() + '\\api\\fangao\\sumbit\\{work_id}.json'.format(work_id=work_id), 'r', encoding='utf-8') as file:
             sumbit_json = json.load(file)
         grade = grades[homwerk_um]
-        sumbit_json['score'] = grade
+        sumbit_json['score'] = str(grade)
         sumbit_list.append(sumbit_json)
     score = max(grades)
-    answer_content = sumbit_list
     answer = {
-        "answer_content": answer_content,
-        "teacher_comment": ""
+        "answer_content": sumbit_list,"teacher_comment": ""
     }
-    url_time = data_json['url_time']
-    data_time = {
-        'request':{
-            "mid": sumbit_list[0]['mid'],
-            "hid": taskid,
-            "student_mid": sid,
-            "type":1
-        }
-    }
-    r_time = requests.post(url=url_time, data=data_time, headers=headers, verify=False)
-    da_time = json.loads(r_time.text)
-    time = da_time['data']['time']
-    checker_start = time
-    checker_end = str(int(time) + 1000000)
+    checker_end = int(time.time())
     data_sumbit = {
-        'request': {
-            "mid": sumbit_list[0]['mid'],
-            "hid": taskid,
-            "student_mid": sid,
-            "score": score,
-            "answer": answer,
-            "checker_start": checker_start,
-            "checker_end": checker_end
-        }
+        'request': '{{"mid": "{mid}","hid":"{teaid}","student_mid": "{sid}","score": {score},"answer": {answer},"checker_start":"{checker_start}","checker_end" :"{checker_end}"}}'.format(mid=str(sumbit_list[0]['mid']), teaid=str(teaid), sid=str(sid), score=score, answer=answer,checker_start=checker_start, checker_end=checker_end)
     }
     r_homework_work = requests.post(url=homweork_informance_url, data=data_sumbit, headers=headers, verify=False)
+    print(r_homework_work.text)
     directory_path = os.getcwd() + '\\api\\fangao\\sumbit'
     delete_files_in_directory(directory_path)

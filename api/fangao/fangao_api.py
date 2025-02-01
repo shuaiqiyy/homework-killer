@@ -107,7 +107,7 @@ def student_list_iformance(token,uid,hid,class_id):
             student_list_name_liat.append(student_umb['username'])
             student_list_id_list.append(student_umb['mid'])
             if student_umb['checker_name'] == "":
-                student_list_msg_list.append("未批改")
+                student_list_msg_list.append("待批改")
             else:
                 student_list_msg_list.append("已批改")
         return code,student_list_name_liat,student_list_id_list,student_list_msg_list
