@@ -12,7 +12,7 @@ def token_hear(token):
         }
     return hear
 
-def user_infotmance(user_number,user_password):
+def user_informance(user_number,user_password):
     user_number = int(user_number)
     user_password = str(user_password)
     url_login = data_json['url_login']

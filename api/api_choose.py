@@ -12,9 +12,9 @@ def api_choose():
             api_liat.append(name)
     return api_liat
 
-def api_user_infotmance(user_number,user_password,api):
+def api_user_informance(user_number,user_password,api):
     if api == 'fangao':
-        return fangao.user_infotmance(user_number,user_password)
+        return fangao.user_informance(user_number,user_password)
     elif api == 'xiaoxin':
         return xiaoxin.user_infotmance(user_number,user_password)
     else:
@@ -22,7 +22,7 @@ def api_user_infotmance(user_number,user_password,api):
         token = uid = name = None
         return code,token,uid,name
 
-def api_class_infomance(token,uid,api):
+def api_class_informance(token,uid,api):
     if api == 'fangao':
         return fangao.class_infomance(token,uid)
     elif api == 'xiaoxin':
@@ -32,7 +32,7 @@ def api_class_infomance(token,uid,api):
         class_name_list = class_id_list = class_subject_list = None
         return code,class_name_list,class_id_list,class_subject_list
 
-def api_homework_list_infomance(token,uid,class_id,subject_id,api):
+def api_homework_list_informance(token,uid,class_id,subject_id,api):
     if api == 'fangao':
         return fangao.homework_list_infomance(token,uid,class_id,subject_id)
     elif api == 'xiaoxin':
