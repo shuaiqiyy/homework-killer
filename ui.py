@@ -2,6 +2,7 @@ import flet as ft
 from core import UserManager, HomeworkManager
 import api.api_choose as api
 from api.api_choose import api_choose
+import function.random_addon as random_addon
 import asyncio
 
 api_list = api_choose()
