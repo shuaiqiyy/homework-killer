@@ -1,7 +1,8 @@
 import flet as ft
 from core import UserManager, HomeworkManager
+import api.api_choose as api
 from api.api_choose import api_choose
-import httpx
+import asyncio
 
 api_list = api_choose()
 
@@ -13,6 +14,7 @@ class HomeworkKillerUI:
         self.current_class_id = None
         self.current_subject_id = None
         self.current_homework_id = None
+        self.student_list = []  # 存储学生列表
         self._setup_ui()
 
     def _setup_ui(self):
@@ -227,15 +229,12 @@ class HomeworkKillerUI:
         finally:
             self._hide_loading()  # 确保加载完成时隐藏
 
-    # 其余保持不变，保持之前的优化内容
-    # ... [保持其他方法不变] ...
-
-
     def _show_grading_dialog(self, homework_id, class_id):
-        """显示批改对话框"""
+        """显示批改对话框 - 包含学生列表"""
         self.current_homework_id = homework_id
         self.current_class_id = class_id
 
+        # 创建滑块
         self.grades_less_slider = ft.Slider(
             min=0, 
             max=10, 
@@ -244,11 +243,20 @@ class HomeworkKillerUI:
             value=3,
             width=300
         )
+        
+        # 获取学生列表
+        self.student_list = self._get_student_list(homework_id, class_id)
+        
+        # 创建学生列表显示组件
+        student_list_widget = self._create_student_list_widget()
 
         dialog = ft.AlertDialog(
             modal=True,
             title=ft.Text("自动批改设置"),
             content=ft.Column([
+                ft.Text("学生列表:", weight=ft.FontWeight.BOLD),
+                student_list_widget,
+                ft.Divider(height=10),
                 ft.Text("最大分差设置："),
                 self.grades_less_slider,
                 ft.FilledButton(
@@ -256,32 +264,158 @@ class HomeworkKillerUI:
                     icon=ft.icons.AUTO_AWESOME,
                     on_click=self._start_grading
                 )
-            ]),
+            ], scroll=ft.ScrollMode.AUTO, height=400),
             actions_alignment=ft.MainAxisAlignment.END
         )
         self.page.dialog = dialog
         dialog.open = True
         self.page.update()
-
-    def _start_grading(self, e):
-        """开始批改作业"""
+    
+    def _get_student_list(self, homework_id, class_id):
+        """获取学生列表数据"""
         try:
-            if not self.current_homework_id or not self.current_class_id:
-                raise ValueError("缺少必要的作业或班级信息")
-
-            success = self.homework.grade_homework(
-                self.current_homework_id,
-                self.current_class_id,
-                int(self.grades_less_slider.value)
+            token = self.user.user_data.get('user_token')
+            uid = self.user.user_data.get('user_uid')
+            api_type = self.user.user_data.get('api')
+            
+            # 获取学生列表
+            code, names, ids, msgs = api.api_student_list_iformance(
+                token, uid, homework_id, class_id, api_type
             )
-            if success:
-                self._show_info_dialog("✅ 批改完成！")
-                self._close_dialog()
-                self._load_homeworks()  # 刷新列表
-            else:
-                self._show_error_dialog("❌ 批改过程中出现错误！")
+            
+            if code == 0 and names:
+                return list(zip(names, ids))
+            return []
+        except Exception as e:
+            print(f"获取学生列表失败: {str(e)}")
+            return []
+    
+    def _create_student_list_widget(self):
+        """创建学生列表UI组件"""
+        if not self.student_list:
+            return ft.Text("⚠️ 未获取到学生列表", color=ft.colors.RED)
+        
+        # 创建可滚动的列表视图
+        list_view = ft.ListView(expand=True, spacing=5, height=200)
+        
+        for name, student_id in self.student_list:
+            list_view.controls.append(
+                ft.ListTile(
+                    title=ft.Text(name),
+                    subtitle=ft.Text(f"ID: {student_id}", size=12, color=ft.colors.GREY),
+                    leading=ft.Icon(ft.icons.PERSON),
+                    dense=True
+                )
+            )
+        
+        return ft.Container(
+            content=list_view,
+            border=ft.border.all(1, ft.colors.GREY_300),
+            border_radius=5,
+            padding=10
+        )
+    
+    def _start_grading(self, e):
+        """开始批改作业 - 显示进度"""
+        try:
+            if not self.student_list:
+                self._show_error_dialog("没有学生需要批改")
+                return
+                
+            # 创建进度对话框
+            self._create_progress_dialog()
+            
+            # 启动批改任务
+            self.page.run_task(self._run_grading_task)
         except Exception as err:
             self._show_error_dialog(f"❗ 批改失败：{str(err)}")
+    
+    def _create_progress_dialog(self):
+        """创建批改进度对话框"""
+        self.progress_bar = ft.ProgressBar(width=400, value=0)
+        self.progress_text = ft.Text("准备开始批改...")
+        
+        self.progress_dialog = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("批改进度"),
+            content=ft.Column([
+                self.progress_text,
+                self.progress_bar
+            ]),
+            actions=[]  # 没有操作按钮
+        )
+        
+        # 关闭之前的对话框
+        if self.page.dialog and self.page.dialog.open:
+            self.page.dialog.open = False
+            
+        self.page.dialog = self.progress_dialog
+        self.progress_dialog.open = True
+        self.page.update()
+    
+    async def _run_grading_task(self):
+        """执行批改任务"""
+        try:
+            total_students = len(self.student_list)
+            
+            for i, (name, student_id) in enumerate(self.student_list):
+                # 更新进度
+                progress = (i + 1) / total_students
+                self.progress_bar.value = progress
+                self.progress_text.value = f"正在批改 {name} 的作业 ({i+1}/{total_students})"
+                self.page.update()
+                
+                # 执行批改
+                success = await self._grade_student(student_id)
+                
+                if not success:
+                    self.progress_text.value += " ❌"
+                else:
+                    self.progress_text.value += " ✅"
+                
+                self.page.update()
+                await asyncio.sleep(0.5)  # 避免UI更新太快
+            
+            # 完成后的处理
+            self._close_dialog()
+            self._show_info_dialog(f"✅ 批改完成！共批改 {total_students} 名学生")
+            
+            # 刷新作业列表
+            self._load_homeworks()
+            
+        except Exception as e:
+            self._close_dialog()
+            self._show_error_dialog(f"批改过程中出错: {str(e)}")
+    
+    async def _grade_student(self, student_id):
+        """批改单个学生的作业"""
+        try:
+            token = self.user.user_data.get('user_token')
+            uid = self.user.user_data.get('user_uid')
+            api_type = self.user.user_data.get('api')
+            
+            # 获取学生作业信息
+            hight_grades, images, teacher_id = api.api_homework_informance(
+                token, self.current_homework_id, student_id, uid, api_type
+            )
+            
+            # 生成随机分数
+            max_diff = int(self.grades_less_slider.value)
+            grades = [
+                random_addon.main(g, max_diff, images) 
+                for g in hight_grades
+            ]
+            
+            # 提交批改结果
+            result = api.api_homework_work(
+                token, self.current_homework_id, student_id, 
+                teacher_id, hight_grades, grades, api_type
+            )
+            
+            return result
+        except Exception as e:
+            print(f"批改学生 {student_id} 失败: {str(e)}")
+            return False
 
     def _show_settings_page(self):
         """显示设置页面"""
@@ -343,16 +477,12 @@ class HomeworkKillerUI:
             return
 
         try:
-            async with httpx.AsyncClient() as client:
-                success = await self.user.async_login(
-                    self.phone_field.value,
-                    self.password_field.value,
-                    self.api_dropdown.value,
-                    client
-                )
-        except httpx.RequestError:
-            self._show_error_dialog("网络连接失败，请检查网络设置")
-            return
+            # 修正：移除了多余的 client 参数
+            success = await self.user.async_login(
+                self.phone_field.value,
+                self.password_field.value,
+                self.api_dropdown.value
+            )
         except Exception as e:
             self._show_error_dialog(f"登录错误：{str(e)}")
             return
@@ -375,8 +505,9 @@ class HomeworkKillerUI:
 
     def _close_dialog(self, e=None):
         """关闭当前对话框"""
-        self.page.dialog.open = False
-        self.page.update()
+        if self.page.dialog:
+            self.page.dialog.open = False
+            self.page.update()
 
     def _show_error_dialog(self, message):
         """显示错误提示"""
