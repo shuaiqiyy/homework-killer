@@ -104,144 +104,146 @@ class HomeworkKillerUI:
         self.page.update()
 
     def _show_home_page(self):
-        """显示美化后的主页"""
+        """显示简约风格的主页（纯色背景）"""
         # ===== 创建主容器 =====
         main_card = ft.Card(
-            elevation=15,
-            margin=ft.margin.symmetric(horizontal=20, vertical=40),
-            shape=ft.RoundedRectangleBorder(radius=15),
+            elevation=8,
+            margin=ft.margin.symmetric(horizontal=25, vertical=30),
+            shape=ft.RoundedRectangleBorder(radius=12),
             content=ft.Container(
-                gradient=ft.LinearGradient(
-                    begin=ft.alignment.top_left,
-                    end=ft.alignment.bottom_right,
-                    colors=["#fd6ef1", "#33eccd"]
-                ),
-                padding=30,
-                border_radius=15,
+                bgcolor=ft.colors.WHITE,  # 使用纯白色背景
+                padding=25,
+                border_radius=12,
                 content=ft.Column(
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                    spacing=25,
+                    spacing=20,
                     controls=[
                         # ===== 应用标题和Logo =====
-                        ft.Row(
-                            alignment=ft.MainAxisAlignment.CENTER,
+                        ft.Column(
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                            spacing=10,
                             controls=[
                                 ft.Image(
                                     src="./logo.ico",
-                                    width=80,
-                                    height=80,
+                                    width=70,
+                                    height=70,
                                     fit=ft.ImageFit.CONTAIN,
-                                    border_radius=15,
                                 ),
                                 ft.Text(
                                     "Homework Killer",
-                                    size=32,
-                                    weight=ft.FontWeight.BOLD,
-                                    color=ft.colors.WHITE
+                                    size=26,
+                                    weight=ft.FontWeight.W_700,
+                                    color=ft.colors.BLACK87
                                 ),
                             ]
                         ),
                         
-                        # ===== 开发者信息卡片 =====
+                        # ===== 开发者信息 =====
                         ft.Container(
-                            bgcolor=ft.colors.with_opacity(0.2, ft.colors.WHITE),
-                            padding=20,
-                            border_radius=15,
+                            bgcolor=ft.colors.GREY_50,  # 浅灰色背景
+                            padding=15,
+                            border_radius=10,
                             content=ft.Column(
-                                spacing=15,
+                                spacing=12,
                                 controls=[
-                                    ft.ListTile(
-                                        leading=ft.Icon(ft.icons.PERSON, color=ft.colors.AMBER),
-                                        title=ft.Text("开发者", color=ft.colors.WHITE70),
-                                        subtitle=ft.Text("shuaiqiyy", 
-                                                        size=18, 
-                                                        weight=ft.FontWeight.BOLD,
-                                                        color=ft.colors.WHITE),
+                                    ft.Row(
+                                        controls=[
+                                            ft.Icon(ft.icons.PERSON_OUTLINE, size=20, color=ft.colors.BLUE_700),
+                                            ft.Text("开发者", size=14, color=ft.colors.GREY_600),
+                                        ]
                                     ),
-                                    ft.Divider(height=1, color=ft.colors.WHITE24),
-                                    ft.ListTile(
-                                        leading=ft.Icon(ft.icons.CODE, color=ft.colors.AMBER),
-                                        title=ft.Text("GitHub 项目", color=ft.colors.WHITE70),
-                                        subtitle=ft.TextButton(
-                                            content=ft.Row([
-                                                ft.Icon(ft.icons.LINK, size=18, color=ft.colors.CYAN_200),
-                                                ft.Text("项目主页",
-                                                        size=16,
-                                                        color=ft.colors.CYAN_200)
-                                            ]),
-                                            on_click=lambda _: self.page.launch_url(
-                                                "https://github.com/shuaiqiyy/Homework-Killer")
-                                        ),
+                                    ft.Text("shuaiqiyy", 
+                                            size=16, 
+                                            weight=ft.FontWeight.W_500,
+                                            color=ft.colors.BLACK87),
+                                    
+                                    ft.Divider(height=8, color=ft.colors.TRANSPARENT),
+                                    
+                                    ft.Row(
+                                        controls=[
+                                            ft.Icon(ft.icons.CODE_OUTLINED, size=20, color=ft.colors.BLUE_700),
+                                            ft.Text("GitHub 项目", size=14, color=ft.colors.GREY_600),
+                                        ]
+                                    ),
+                                    ft.TextButton(
+                                        content=ft.Text("https://github.com/shuaiqiyy/Homework-Killer",
+                                                        size=14,
+                                                        color=ft.colors.BLUE_700),
+                                        on_click=lambda _: self.page.launch_url(
+                                            "https://github.com/shuaiqiyy/Homework-Killer")
                                     ),
                                 ]
                             )
                         ),
                         
-                        # ===== 重要提示卡片 =====
+                        # ===== 重要提示 =====
                         ft.Container(
-                            bgcolor=ft.colors.with_opacity(0.15, ft.colors.AMBER),
-                            padding=20,
-                            border_radius=15,
-                            content=ft.Column(
+                            bgcolor=ft.colors.AMBER_50,
+                            padding=15,
+                            border_radius=10,
+                            content=ft.Row(
                                 spacing=10,
                                 controls=[
-                                    ft.Row([
-                                        ft.Icon(ft.icons.WARNING_AMBER, color=ft.colors.AMBER),
-                                        ft.Text("重要提示", size=16, weight=ft.FontWeight.BOLD, color=ft.colors.AMBER)
-                                    ], alignment=ft.MainAxisAlignment.CENTER),
-                                    ft.Text(
-                                        "此产品为爱发电，所有收费均是骗子！！！",
-                                        size=16,
-                                        weight=ft.FontWeight.BOLD,
-                                        text_align=ft.TextAlign.CENTER,
-                                        color=ft.colors.AMBER_ACCENT_200
+                                    ft.Icon(ft.icons.INFO_OUTLINE, color=ft.colors.AMBER_700, size=20),
+                                    ft.Container(
+                                        content=ft.Text(
+                                            "此产品为开源项目，所有收费均是骗子！",
+                                            size=14,
+                                            weight=ft.FontWeight.W_500,
+                                            color=ft.colors.AMBER_900
+                                        ),
+                                        padding=ft.padding.only(left=5)
                                     )
                                 ]
                             )
                         ),
                         
-                        # ===== 支持按钮 =====
-                        ft.FilledButton(
-                            content=ft.Row([
-                                ft.Icon(ft.icons.STAR, color=ft.colors.AMBER),
-                                ft.Text("支持开发者", size=16)
-                            ], alignment=ft.MainAxisAlignment.CENTER, spacing=10),
-                            style=ft.ButtonStyle(
-                                bgcolor={
-                                    ft.MaterialState.DEFAULT: ft.colors.AMBER,
-                                    ft.MaterialState.HOVERED: ft.colors.AMBER_700
-                                },
-                                color=ft.colors.BLACK87,
-                                padding=20,
-                                shape=ft.RoundedRectangleBorder(radius=12),
-                                overlay_color=ft.colors.TRANSPARENT
-                            ),
-                            width=200,
-                            on_click=lambda _: self.page.launch_url(
-                                "https://github.com/shuaiqiyy/Homework-Killer")
+                        # ===== 操作按钮 =====
+                        ft.Row(
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            spacing=20,
+                            controls=[
+                                # 支持按钮
+                                ft.OutlinedButton(
+                                    content=ft.Row([
+                                        ft.Icon(ft.icons.STAR_BORDER, size=16, color=ft.colors.BLUE_700),
+                                        ft.Text("支持开发者", size=14, color=ft.colors.BLUE_700)
+                                    ]),
+                                    style=ft.ButtonStyle(
+                                        padding=15,
+                                        shape=ft.RoundedRectangleBorder(radius=8),
+                                    ),
+                                    on_click=lambda _: self.page.launch_url(
+                                        "https://github.com/shuaiqiyy/Homework-Killer")
+                                ),
+                                
+                                # 更新按钮
+                                ft.OutlinedButton(
+                                    content=ft.Row([
+                                        ft.Icon(ft.icons.UPDATE, size=16, color=ft.colors.GREEN_700),
+                                        ft.Text("检查更新", size=14, color=ft.colors.GREEN_700)
+                                    ]),
+                                    style=ft.ButtonStyle(
+                                        padding=15,
+                                        shape=ft.RoundedRectangleBorder(radius=8),
+                                    ),
+                                    on_click=self._check_update
+                                )
+                            ]
                         ),
                         
                         # ===== 版本信息 =====
-                        ft.Row([
-                            ft.Text(
-                                "版本 v1.0.0",
-                                color=ft.colors.WHITE70
-                            ),
-                            ft.VerticalDivider(width=20, color=ft.colors.TRANSPARENT),
-                            ft.TextButton(
-                                content=ft.Row([
-                                    ft.Icon(ft.icons.UPDATE, size=16, color=ft.colors.BROWN),
-                                    ft.Text("检查更新", color=ft.colors.BROWN)
-                                ]),
-                                on_click=self._check_update
-                            )
-                        ], alignment=ft.MainAxisAlignment.CENTER)
+                        ft.Text(
+                            "版本 v1.0.0",
+                            size=12,
+                            color=ft.colors.GREY_600
+                        )
                     ]
                 )
             )
         )
 
-        # 清空并添加新内容
+        # 更新页面内容
         self.content_column.controls.clear()
         self.content_column.controls.append(main_card)
         self.page.update()
