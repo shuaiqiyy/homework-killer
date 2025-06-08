@@ -14,7 +14,7 @@ def delete_files_in_directory(directory):
         if os.path.isfile(file_path):
             os.unlink(file_path)
 
-def homweork_informance(token,taskid,sid,user_id):
+def homework_informance(token,taskid,sid,user_id):
     hight_grades = []
     homwerk_img = []
     teaid = []

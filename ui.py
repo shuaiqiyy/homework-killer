@@ -187,7 +187,6 @@ class HomeworkKillerUI:
 
             if code != 0:
                 raise ValueError(f"获取作业失败，错误码：{code}")
-
             # 使用ListView优化布局
             homework_list = ft.ListView(expand=True, spacing=10)
             
@@ -250,7 +249,6 @@ class HomeworkKillerUI:
         
         # 创建学生列表显示组件
         student_list_widget = self._create_student_list_widget()
-
         dialog = ft.AlertDialog(
             modal=True,
             title=ft.Text("自动批改设置"),
@@ -343,7 +341,7 @@ class HomeworkKillerUI:
                 self.progress_text,
                 self.progress_bar
             ]),
-            actions=[]  # 没有操作按钮
+            actions=[]
         )
         
         # 关闭之前的对话框
@@ -375,7 +373,7 @@ class HomeworkKillerUI:
                     self.progress_text.value += " ✅"
                 
                 self.page.update()
-                await asyncio.sleep(0.5)  # 避免UI更新太快
+                await asyncio.sleep(0.5)
             
             # 完成后的处理
             self._close_dialog()
@@ -394,20 +392,14 @@ class HomeworkKillerUI:
             token = self.user.user_data.get('user_token')
             uid = self.user.user_data.get('user_uid')
             api_type = self.user.user_data.get('api')
-            
-            # 获取学生作业信息
             hight_grades, images, teacher_id = api.api_homework_informance(
                 token, self.current_homework_id, student_id, uid, api_type
             )
-            
-            # 生成随机分数
             max_diff = int(self.grades_less_slider.value)
             grades = [
                 random_addon.main(g, max_diff, images) 
                 for g in hight_grades
             ]
-            
-            # 提交批改结果
             result = api.api_homework_work(
                 token, self.current_homework_id, student_id, 
                 teacher_id, hight_grades, grades, api_type
@@ -478,7 +470,6 @@ class HomeworkKillerUI:
             return
 
         try:
-            # 修正：移除了多余的 client 参数
             success = await self.user.async_login(
                 self.phone_field.value,
                 self.password_field.value,
@@ -490,7 +481,7 @@ class HomeworkKillerUI:
 
         if success:
             self._close_dialog()
-            self._on_rail_change(None)  # 刷新界面
+            self._on_rail_change(None)
             self._show_info_dialog("🎉 登录成功！")
         else:
             self._show_error_dialog("登录失败，请检查账号密码！")
