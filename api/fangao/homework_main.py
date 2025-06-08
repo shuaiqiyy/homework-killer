@@ -1,11 +1,13 @@
 import os
+from pathlib import Path
 import json
 import time
 import requests
 
 requests.packages.urllib3.disable_warnings(
     requests.packages.urllib3.exceptions.InsecureRequestWarning)
-with open(os.getcwd() + '\\api\\fangao\\fangao_api.json', 'r', encoding='utf-8') as file:
+file_path = Path.cwd() / 'api' / 'fangao' / 'fangao_api.json'
+with file_path.open('r', encoding='utf-8') as file:
     data_json = json.load(file)
 
 def delete_files_in_directory(directory):
@@ -33,7 +35,8 @@ def homework_informance(token,taskid,sid,user_id):
     for da_home in da_homework['answer_content']:
         if da_home['question_type'] == 1:
             said = da_home['said']
-            with open(os.getcwd() + '\\api\\fangao\\sumbit\\{said}.json'.format(said=said), "w", encoding="utf-8") as file:
+            file_path_sub = Path.cwd() / 'api' / 'fangao' / 'sumbit' / '{said}.json'.format(said=said)
+            with file_path_sub.open('r', encoding='utf-8') as file:
                 json.dump(da_home, file, ensure_ascii=False, indent=4)
             hight_grades.append(da_home['question_score'])
             teaid.append(said)
@@ -48,7 +51,8 @@ def homework_work(token, teaid, sid, taskid, hight, grades):
     sumbit_list = []
     for homwerk_um in range(len(taskid)):
         work_id = taskid[homwerk_um]
-        with open(os.getcwd() + '\\api\\fangao\\sumbit\\{work_id}.json'.format(work_id=work_id), 'r', encoding='utf-8') as file:
+        file_path_sub = Path.cwd() / 'api' / 'fangao' / 'sumbit' / '{said}.json'.format(said=work_id)
+        with file_path_sub.open('r', encoding='utf-8') as file:
             sumbit_json = json.load(file)
         grade = grades[homwerk_um]
         sumbit_json['score'] = str(grade)
@@ -63,5 +67,5 @@ def homework_work(token, teaid, sid, taskid, hight, grades):
     }
     r_homework_work = requests.post(url=homweork_informance_url, data=data_sumbit, headers=headers, verify=False)
     print(r_homework_work.text)
-    directory_path = os.getcwd() + '\\api\\fangao\\sumbit'
+    directory_path = Path.cwd() / 'api' / 'fangao' / 'sumbit' 
     delete_files_in_directory(directory_path)

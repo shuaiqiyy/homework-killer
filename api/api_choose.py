@@ -1,11 +1,12 @@
 import os
+from pathlib import Path
 import api.fangao.fangao_api as fangao
 import api.xiaoxin.xiaoxin_api as xiaoxin
 import api.fangao.homework_main as homework_fangao
 import api.xiaoxin.homework_main as homework_xiaoxin
 
 def api_choose():
-    path_api = os.getcwd() + "\\api"
+    path_api = Path.cwd() / 'api'
     api_list = []
     for name in os.listdir(path_api):
         if os.path.isdir(os.path.join(path_api, name)):
