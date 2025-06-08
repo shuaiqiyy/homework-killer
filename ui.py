@@ -114,7 +114,7 @@ class HomeworkKillerUI:
                 gradient=ft.LinearGradient(
                     begin=ft.alignment.top_left,
                     end=ft.alignment.bottom_right,
-                    colors=["#1e3c72", "#2a5298"]
+                    colors=["#fd6ef1", "#33eccd"]
                 ),
                 padding=30,
                 border_radius=15,
@@ -204,7 +204,7 @@ class HomeworkKillerUI:
                         ft.FilledButton(
                             content=ft.Row([
                                 ft.Icon(ft.icons.STAR, color=ft.colors.AMBER),
-                                ft.Text("⭐ 支持开发者 ⭐", size=16)
+                                ft.Text("支持开发者", size=16)
                             ], alignment=ft.MainAxisAlignment.CENTER, spacing=10),
                             style=ft.ButtonStyle(
                                 bgcolor={
@@ -230,8 +230,8 @@ class HomeworkKillerUI:
                             ft.VerticalDivider(width=20, color=ft.colors.TRANSPARENT),
                             ft.TextButton(
                                 content=ft.Row([
-                                    ft.Icon(ft.icons.UPDATE, size=16, color=ft.colors.CYAN_200),
-                                    ft.Text("检查更新", color=ft.colors.CYAN_200)
+                                    ft.Icon(ft.icons.UPDATE, size=16, color=ft.colors.BROWN),
+                                    ft.Text("检查更新", color=ft.colors.BROWN)
                                 ]),
                                 on_click=self._check_update
                             )
