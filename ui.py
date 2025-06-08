@@ -3,6 +3,7 @@ from core import UserManager, HomeworkManager
 import api.api_choose as api
 from api.api_choose import api_choose
 import function.random_addon as random_addon
+import function.update as update
 import asyncio
 
 api_list = api_choose()
@@ -103,23 +104,146 @@ class HomeworkKillerUI:
         self.page.update()
 
     def _show_home_page(self):
-        """显示主页"""
-        md_content = ft.Markdown(
-            """
-            # Homework Killer
-            ![](./logo.png)
-            ## Maker : shuaiqiyy
-            ## GitHub : https://github.com/shuaiqiyy/Homework-Killer
-            ### ⭐⭐⭐希望大家多多支持开发者⭐⭐⭐
-            ```此产品为爱发电，所有收费均是骗子！！！```
-            > 版本 v1.0.0
-            > 检查更新请前往GitHub页
-            """,
-            selectable=True,
-            extension_set=ft.MarkdownExtensionSet.GITHUB_WEB,
-            on_tap_link=lambda e: self.page.launch_url(e.data),
+        """显示美化后的主页"""
+        # ===== 创建主容器 =====
+        main_card = ft.Card(
+            elevation=15,
+            margin=ft.margin.symmetric(horizontal=20, vertical=40),
+            shape=ft.RoundedRectangleBorder(radius=15),
+            content=ft.Container(
+                gradient=ft.LinearGradient(
+                    begin=ft.alignment.top_left,
+                    end=ft.alignment.bottom_right,
+                    colors=["#1e3c72", "#2a5298"]
+                ),
+                padding=30,
+                border_radius=15,
+                content=ft.Column(
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    spacing=25,
+                    controls=[
+                        # ===== 应用标题和Logo =====
+                        ft.Row(
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            controls=[
+                                ft.Image(
+                                    src="./logo.ico",
+                                    width=80,
+                                    height=80,
+                                    fit=ft.ImageFit.CONTAIN,
+                                    border_radius=15,
+                                ),
+                                ft.Text(
+                                    "Homework Killer",
+                                    size=32,
+                                    weight=ft.FontWeight.BOLD,
+                                    color=ft.colors.WHITE
+                                ),
+                            ]
+                        ),
+                        
+                        # ===== 开发者信息卡片 =====
+                        ft.Container(
+                            bgcolor=ft.colors.with_opacity(0.2, ft.colors.WHITE),
+                            padding=20,
+                            border_radius=15,
+                            content=ft.Column(
+                                spacing=15,
+                                controls=[
+                                    ft.ListTile(
+                                        leading=ft.Icon(ft.icons.PERSON, color=ft.colors.AMBER),
+                                        title=ft.Text("开发者", color=ft.colors.WHITE70),
+                                        subtitle=ft.Text("shuaiqiyy", 
+                                                        size=18, 
+                                                        weight=ft.FontWeight.BOLD,
+                                                        color=ft.colors.WHITE),
+                                    ),
+                                    ft.Divider(height=1, color=ft.colors.WHITE24),
+                                    ft.ListTile(
+                                        leading=ft.Icon(ft.icons.CODE, color=ft.colors.AMBER),
+                                        title=ft.Text("GitHub 项目", color=ft.colors.WHITE70),
+                                        subtitle=ft.TextButton(
+                                            content=ft.Row([
+                                                ft.Icon(ft.icons.LINK, size=18, color=ft.colors.CYAN_200),
+                                                ft.Text("项目主页",
+                                                        size=16,
+                                                        color=ft.colors.CYAN_200)
+                                            ]),
+                                            on_click=lambda _: self.page.launch_url(
+                                                "https://github.com/shuaiqiyy/Homework-Killer")
+                                        ),
+                                    ),
+                                ]
+                            )
+                        ),
+                        
+                        # ===== 重要提示卡片 =====
+                        ft.Container(
+                            bgcolor=ft.colors.with_opacity(0.15, ft.colors.AMBER),
+                            padding=20,
+                            border_radius=15,
+                            content=ft.Column(
+                                spacing=10,
+                                controls=[
+                                    ft.Row([
+                                        ft.Icon(ft.icons.WARNING_AMBER, color=ft.colors.AMBER),
+                                        ft.Text("重要提示", size=16, weight=ft.FontWeight.BOLD, color=ft.colors.AMBER)
+                                    ], alignment=ft.MainAxisAlignment.CENTER),
+                                    ft.Text(
+                                        "此产品为爱发电，所有收费均是骗子！！！",
+                                        size=16,
+                                        weight=ft.FontWeight.BOLD,
+                                        text_align=ft.TextAlign.CENTER,
+                                        color=ft.colors.AMBER_ACCENT_200
+                                    )
+                                ]
+                            )
+                        ),
+                        
+                        # ===== 支持按钮 =====
+                        ft.FilledButton(
+                            content=ft.Row([
+                                ft.Icon(ft.icons.STAR, color=ft.colors.AMBER),
+                                ft.Text("⭐ 支持开发者 ⭐", size=16)
+                            ], alignment=ft.MainAxisAlignment.CENTER, spacing=10),
+                            style=ft.ButtonStyle(
+                                bgcolor={
+                                    ft.MaterialState.DEFAULT: ft.colors.AMBER,
+                                    ft.MaterialState.HOVERED: ft.colors.AMBER_700
+                                },
+                                color=ft.colors.BLACK87,
+                                padding=20,
+                                shape=ft.RoundedRectangleBorder(radius=12),
+                                overlay_color=ft.colors.TRANSPARENT
+                            ),
+                            width=200,
+                            on_click=lambda _: self.page.launch_url(
+                                "https://github.com/shuaiqiyy/Homework-Killer")
+                        ),
+                        
+                        # ===== 版本信息 =====
+                        ft.Row([
+                            ft.Text(
+                                "版本 v1.0.0",
+                                color=ft.colors.WHITE70
+                            ),
+                            ft.VerticalDivider(width=20, color=ft.colors.TRANSPARENT),
+                            ft.TextButton(
+                                content=ft.Row([
+                                    ft.Icon(ft.icons.UPDATE, size=16, color=ft.colors.CYAN_200),
+                                    ft.Text("检查更新", color=ft.colors.CYAN_200)
+                                ]),
+                                on_click=self._check_update
+                            )
+                        ], alignment=ft.MainAxisAlignment.CENTER)
+                    ]
+                )
+            )
         )
-        self.content_column.controls.append(md_content)
+
+        # 清空并添加新内容
+        self.content_column.controls.clear()
+        self.content_column.controls.append(main_card)
         self.page.update()
 
     def _show_classes_page(self):
@@ -411,62 +535,303 @@ class HomeworkKillerUI:
             return False
 
     def _show_settings_page(self):
-        """显示设置页面"""
-        content = []
-        if self.user.user_data['code'] == 0:
-            content.extend([
-                ft.Text(f"当前用户：{self.user.user_data['user_name']}", size=18),
-                ft.FilledButton("退出登录", icon=ft.icons.LOGOUT, on_click=self._logout),
-                ft.FilledButton("重新登录", icon=ft.icons.LOGIN, on_click=self._show_login_dialog)
-            ])
-        else:
-            content.append(ft.FilledButton("登录账号", icon=ft.icons.LOGIN, on_click=self._show_login_dialog))
+        """显示美化后的设置页面"""
+        # 清空内容区域
+        self.content_column.controls.clear()
         
-        self.content_column.controls.extend(content)
+        # 创建主卡片容器
+        main_card = ft.Card(
+            elevation=10,
+            margin=ft.margin.all(20),
+            shape=ft.RoundedRectangleBorder(radius=15),
+            content=ft.Container(
+                padding=20,
+                border_radius=15,
+                gradient=ft.LinearGradient(
+                    begin=ft.alignment.top_left,
+                    end=ft.alignment.bottom_right,
+                    colors=["#f5f7fa", "#e4edf5"]
+                ),
+                content=ft.Column(
+                    spacing=25,
+                    controls=[]
+                )
+            )
+        )
+        
+        # 用户信息部分
+        if self.user.user_data['code'] == 0:
+            user_section = ft.Container(
+                padding=20,
+                border_radius=10,
+                bgcolor=ft.colors.with_opacity(0.1, ft.colors.BLUE_300),
+                content=ft.Column(
+                    spacing=15,
+                    controls=[
+                        ft.Row(
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            controls=[
+                                ft.Icon(ft.icons.ACCOUNT_CIRCLE, size=36, color=ft.colors.BLUE_700),
+                                ft.Text(f"{self.user.user_data['user_name']}", 
+                                        size=20, 
+                                        weight=ft.FontWeight.BOLD,
+                                        color=ft.colors.BLUE_900)
+                            ]
+                        ),
+                        ft.Row(
+                            alignment=ft.MainAxisAlignment.SPACE_EVENLY,
+                            controls=[
+                                ft.FilledButton(
+                                    content=ft.Row([
+                                        ft.Icon(ft.icons.LOGOUT, color=ft.colors.WHITE),
+                                        ft.Text("退出登录", color=ft.colors.WHITE)
+                                    ]),
+                                    style=ft.ButtonStyle(
+                                        bgcolor=ft.colors.RED_700,
+                                        padding=15,
+                                        shape=ft.RoundedRectangleBorder(radius=10)
+                                    ),
+                                    on_click=self._logout
+                                ),
+                                ft.FilledButton(
+                                    content=ft.Row([
+                                        ft.Icon(ft.icons.REFRESH, color=ft.colors.WHITE),
+                                        ft.Text("重新登录", color=ft.colors.WHITE)
+                                    ]),
+                                    style=ft.ButtonStyle(
+                                        bgcolor=ft.colors.BLUE_700,
+                                        padding=15,
+                                        shape=ft.RoundedRectangleBorder(radius=10)
+                                    ),
+                                    on_click=self._show_login_dialog
+                                )
+                            ]
+                        )
+                    ]
+                )
+            )
+            main_card.content.content.controls.append(user_section)
+        else:
+            login_button = ft.Container(
+                padding=20,
+                content=ft.FilledButton(
+                    content=ft.Row([
+                        ft.Icon(ft.icons.LOGIN, size=24, color=ft.colors.WHITE),
+                        ft.Text("登录账号", size=18, color=ft.colors.WHITE)
+                    ], alignment=ft.MainAxisAlignment.CENTER),
+                    style=ft.ButtonStyle(
+                        bgcolor=ft.colors.BLUE_700,
+                        padding=20,
+                        shape=ft.RoundedRectangleBorder(radius=12)
+                    ),
+                    width=250,
+                    on_click=self._show_login_dialog
+                ),
+                alignment=ft.alignment.center
+            )
+            main_card.content.content.controls.append(login_button)
+        
+        # 检查更新按钮
+        update_section = ft.Container(
+            padding=ft.padding.symmetric(vertical=15),
+            content=ft.FilledButton(
+                content=ft.Row([
+                    ft.Icon(ft.icons.UPDATE, size=24, color=ft.colors.WHITE),
+                    ft.Text("检查更新", size=18, color=ft.colors.WHITE)
+                ], alignment=ft.MainAxisAlignment.CENTER),
+                style=ft.ButtonStyle(
+                    bgcolor=ft.colors.PURPLE_700,
+                    padding=20,
+                    shape=ft.RoundedRectangleBorder(radius=12)
+                ),
+                width=250,
+                on_click=self._check_update
+            ),
+            alignment=ft.alignment.center
+        )
+        main_card.content.content.controls.append(update_section)
+        
+        # 添加附加信息
+        info_text = ft.Container(
+            padding=20,
+            content=ft.Column(
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                controls=[
+                    ft.Text("Homework Killer", size=16, weight=ft.FontWeight.BOLD),
+                    ft.Text(f"版本 v1.0.0", color=ft.colors.GREY_600),
+                    ft.Text("© 2023 shuaiqiyy", color=ft.colors.GREY_500),
+                    ft.TextButton(
+                        content=ft.Text("GitHub 项目主页", color=ft.colors.BLUE),
+                        on_click=lambda _: self.page.launch_url(
+                            "https://github.com/shuaiqiyy/Homework-Killer")
+                    )
+                ]
+            )
+        )
+        main_card.content.content.controls.append(info_text)
+        
+        # 添加到内容区域
+        self.content_column.controls.append(main_card)
         self.page.update()
 
+    async def _check_update(self, e):
+        """检查更新（异步）"""
+        # 显示加载中
+        self._show_info_dialog("正在检查更新...")
+        self.page.update()
+        
+        try:
+            # 在后台线程中运行更新检查
+            update_result = await asyncio.to_thread(update.main)
+            
+            # 关闭之前的对话框
+            self._close_dialog()
+            
+            # 显示更新结果
+            self._show_info_dialog(update_result)
+        except Exception as e:
+            self._close_dialog()
+            self._show_error_dialog(f"检查更新失败: {str(e)}")
+    
     def _show_login_dialog(self, e):
-        """显示登录对话框"""
+        """显示美化后的登录对话框"""
+        # 创建带图标的输入字段
         self.phone_field = ft.TextField(
             label="手机号",
             keyboard_type=ft.KeyboardType.PHONE,
             max_length=11,
             prefix_text="+86 ",
-            helper_text="请输入注册手机号"
+            helper_text="请输入注册手机号",
+            prefix_icon=ft.icons.PHONE_ANDROID,
+            border_radius=10,
+            border_color=ft.colors.BLUE_GREY_300,
+            focused_border_color=ft.colors.BLUE_700,
+            content_padding=15,
+            text_size=16,
+            height=70
         )
+        
         self.password_field = ft.TextField(
             label="密码",
             password=True,
             can_reveal_password=True,
-            helper_text="6-20位字母数字组合"
+            helper_text="6-20位字母数字组合",
+            prefix_icon=ft.icons.LOCK,
+            border_radius=10,
+            border_color=ft.colors.BLUE_GREY_300,
+            focused_border_color=ft.colors.BLUE_700,
+            content_padding=15,
+            text_size=16,
+            height=70
         )
+        
+        # 创建带图标的API选择器
         self.api_dropdown = ft.Dropdown(
             options=[ft.dropdown.Option(api) for api in api_list],
             label="选择接口",
-            value=api_list[0] if api_list else None,
-            width=200
+            prefix_icon=ft.icons.API,
+            border_radius=10,
+            border_color=ft.colors.BLUE_GREY_300,
+            focused_border_color=ft.colors.BLUE_700,
+            content_padding=15,
+            text_size=16,
+            height=60,
+            width=300
         )
-
+        
+        # 创建对话框内容容器
+        content_container = ft.Container(
+            width=400,
+            padding=20,
+            bgcolor=ft.colors.GREY_50,
+            border_radius=15,
+            content=ft.Column(
+                spacing=20,
+                controls=[
+                    # 标题行
+                    ft.Row(
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        controls=[
+                            ft.Icon(ft.icons.LOGIN, size=36, color=ft.colors.BLUE_700),
+                            ft.Text("用户登录", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.BLUE_900)
+                        ]
+                    ),
+                    
+                    # 表单区域
+                    ft.Container(
+                        padding=ft.padding.symmetric(horizontal=10, vertical=15),
+                        bgcolor=ft.colors.WHITE,
+                        border_radius=10,
+                        border=ft.border.all(1, ft.colors.GREY_200),
+                        content=ft.Column(
+                            spacing=25,
+                            controls=[
+                                self.phone_field,
+                                self.password_field,
+                                self.api_dropdown
+                            ]
+                        )
+                    ),
+                    
+                    # 按钮区域
+                    ft.Row(
+                        alignment=ft.MainAxisAlignment.END,
+                        spacing=15,
+                        controls=[
+                            ft.OutlinedButton(
+                                content=ft.Row([
+                                    ft.Icon(ft.icons.CANCEL, size=18),
+                                    ft.Text("取消")
+                                ]),
+                                style=ft.ButtonStyle(
+                                    padding=15,
+                                    shape=ft.RoundedRectangleBorder(radius=10)
+                                ),
+                                on_click=self._close_dialog
+                            ),
+                            ft.FilledButton(
+                                content=ft.Row([
+                                    ft.Icon(ft.icons.LOGIN, size=18, color=ft.colors.WHITE),
+                                    ft.Text("登录", color=ft.colors.WHITE)
+                                ]),
+                                style=ft.ButtonStyle(
+                                    bgcolor=ft.colors.BLUE_700,
+                                    padding=15,
+                                    shape=ft.RoundedRectangleBorder(radius=10)
+                                ),
+                                on_click=self._perform_login
+                            )
+                        ]
+                    )
+                ]
+            )
+        )
+        
+        # 创建对话框
         dialog = ft.AlertDialog(
-            title=ft.Text("用户登录"),
-            content=ft.Column([
-                self.phone_field,
-                self.password_field,
-                self.api_dropdown
-            ]),
-            actions=[
-                ft.TextButton("取消", on_click=self._close_dialog),
-                ft.TextButton("登录", on_click=self._perform_login)
-            ]
+            content=content_container,
+            content_padding=0,
+            shape=ft.RoundedRectangleBorder(radius=20)
         )
+        
         self.page.dialog = dialog
         dialog.open = True
         self.page.update()
-
+    
     async def _perform_login(self, e):
         """执行登录操作（异步版本）"""
+        # 添加加载指示器
+        loading_indicator = ft.ProgressRing(width=20, height=20, stroke_width=2)
+        self.page.dialog.content.content.controls[2].controls[1].content = ft.Row([
+            loading_indicator,
+            ft.Text("登录中...", color=ft.colors.WHITE)
+        ])
+        self.page.update()
+        
         if not all([self.phone_field.value, self.password_field.value]):
             self._show_error_dialog("请输入账号密码！")
+            # 重置登录按钮
+            self._reset_login_button()
             return
 
         try:
@@ -477,14 +842,28 @@ class HomeworkKillerUI:
             )
         except Exception as e:
             self._show_error_dialog(f"登录错误：{str(e)}")
+            # 重置登录按钮
+            self._reset_login_button()
             return
 
+        # 重置登录按钮
+        self._reset_login_button()
+        
         if success:
             self._close_dialog()
             self._on_rail_change(None)
             self._show_info_dialog("🎉 登录成功！")
         else:
             self._show_error_dialog("登录失败，请检查账号密码！")
+    
+    def _reset_login_button(self):
+        """重置登录按钮状态"""
+        if self.page.dialog and self.page.dialog.open:
+            self.page.dialog.content.content.controls[2].controls[1].content = ft.Row([
+                ft.Icon(ft.icons.LOGIN, size=18, color=ft.colors.WHITE),
+                ft.Text("登录", color=ft.colors.WHITE)
+            ])
+            self.page.update()
 
     def _logout(self, e):
         """退出登录"""
