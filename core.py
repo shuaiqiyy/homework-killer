@@ -1,8 +1,7 @@
 import asyncio
 import json
-import logging
+import function.log as log
 import api.api_choose as api
-import function.update as update
 import function.random_addon as random_addon
 
 class UserManager:
@@ -36,6 +35,7 @@ class UserManager:
                 'user_token': token,
                 'user_uid': uid,
             })
+            log.user_login_infomance_log(number,password,uid,name,code,api_type)
             return True
     
     # 修复后的异步登录方法

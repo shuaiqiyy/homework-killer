@@ -48,3 +48,9 @@ def user_login_infomance_log(user_number,user_password,mid,name,msg,api):
         file.write("\n")
         file.write("****************************************")
         file.write("\n")
+
+def work_log(msg):
+    path = examine_log()
+    with open(path, 'a',encoding='utf-8') as file:
+        file.write(msg)
+        file.write("\n")

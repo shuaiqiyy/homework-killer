@@ -1,4 +1,5 @@
 import flet as ft
+import function.log as log
 from core import UserManager, HomeworkManager
 from ui import HomeworkKillerUI
 
@@ -6,6 +7,7 @@ def main(page: ft.Page):
     # 初始化核心组件
     user_manager = UserManager()
     homework_manager = HomeworkManager(user_manager)
+    log.examine_log()
     
     # 初始化UI
     ui = HomeworkKillerUI(page, user_manager, homework_manager)

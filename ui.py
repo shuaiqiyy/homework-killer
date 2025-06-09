@@ -1,4 +1,5 @@
 import flet as ft
+import function.log as log
 from core import UserManager, HomeworkManager
 import api.api_choose as api
 from api.api_choose import api_choose
@@ -412,7 +413,8 @@ class HomeworkKillerUI:
                 return list(zip(names, ids))
             return []
         except Exception as e:
-            print(f"获取学生列表失败: {str(e)}")
+            log_msg = (f"获取学生列表失败: {str(e)}")
+            log.work_log(log_msg)
             return []
     
     def _create_student_list_widget(self):
@@ -488,6 +490,7 @@ class HomeworkKillerUI:
                 progress = (i + 1) / total_students
                 self.progress_bar.value = progress
                 self.progress_text.value = f"正在批改 {name} 的作业 ({i+1}/{total_students})"
+                log.work_log(f"正在批改 {name} 的作业 ({i+1}/{total_students})")
                 self.page.update()
                 
                 # 执行批改
@@ -533,7 +536,8 @@ class HomeworkKillerUI:
             
             return result
         except Exception as e:
-            print(f"批改学生 {student_id} 失败: {str(e)}")
+            log_msg = (f"批改学生 {student_id} 失败: {str(e)}")
+            log.work_log(log_msg)
             return False
 
     def _show_settings_page(self):
