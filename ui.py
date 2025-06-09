@@ -268,9 +268,11 @@ class HomeworkKillerUI:
         try:
             code, classes, ids, subjects = self.homework.get_classes()
             if code != 0:
+                log.work_log(f"获取班级失败，错误码：{code}")
                 raise ValueError(f"获取班级失败，错误码：{code}")
             
             if not (len(classes) == len(ids) == len(subjects)):
+                log.work_log(f"返回的班级数据不完整")
                 raise ValueError("返回的班级数据不完整")
 
             self.tabs.tabs = [
@@ -305,6 +307,7 @@ class HomeworkKillerUI:
         try:
             self._show_loading()  # 显示加载状态
             if not self.current_class_id or not self.current_subject_id:
+                log.work_log("缺少班级或科目信息")
                 raise ValueError("缺少班级或科目信息")
 
             code, hw_names, hw_ids = self.homework.get_homeworks(
@@ -455,6 +458,7 @@ class HomeworkKillerUI:
             # 启动批改任务
             self.page.run_task(self._run_grading_task)
         except Exception as err:
+            log.work_log(f"❗ 批改失败：{str(err)}")
             self._show_error_dialog(f"❗ 批改失败：{str(err)}")
     
     def _create_progress_dialog(self):
@@ -507,6 +511,7 @@ class HomeworkKillerUI:
             # 完成后的处理
             self._close_dialog()
             self._show_info_dialog(f"✅ 批改完成！共批改 {total_students} 名学生")
+            log.work_log("✅ 批改完成！")
             
             # 刷新作业列表
             self._load_homeworks()
@@ -514,6 +519,7 @@ class HomeworkKillerUI:
         except Exception as e:
             self._close_dialog()
             self._show_error_dialog(f"批改过程中出错: {str(e)}")
+            log.work_log(f"批改过程中出错: {str(e)}")
     
     async def _grade_student(self, student_id):
         """批改单个学生的作业"""
