@@ -10,12 +10,6 @@ file_path = Path.cwd() / 'api' / 'fangao' / 'fangao_api.json'
 with file_path.open('r', encoding='utf-8') as file:
     data_json = json.load(file)
 
-file_path_uid = Path.cwd() / 'user.json'
-with file_path_uid.open('r', encoding='utf-8') as file:
-    data_json_uid = json.load(file)
-    uid = data_json_uid['user_uid']
-
-
 def convert_to_target_format(data):
     # 创建数据副本以避免修改原始数据
     converted = data.copy()
@@ -111,6 +105,10 @@ def homework_work(token, teaid, sid, taskid, hight, grades):
         "answer_content": sumbit_list,"teacher_comment": ""
     }
     checker_end = int(time.time())
+    file_path_uid = Path.cwd() / 'user.json'
+    with file_path_uid.open('r', encoding='utf-8') as file:
+        data_json_uid = json.load(file)
+        uid = data_json_uid['user_uid']
     data_sumbit = {
         'request': '{{"mid": "{mid}","hid":"{teaid}","student_mid": "{sid}","score": {score},"answer": {answer},"checker_start":"{checker_start}","checker_end" :"{checker_end}"}}'.format(
             mid=str(uid), teaid=str(teaid), sid=str(sid), score=score, answer=str(answer),checker_start=checker_start, checker_end=checker_end)
