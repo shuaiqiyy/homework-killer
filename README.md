@@ -5,6 +5,7 @@
   
   <h2 align="center">Homework Killer</h2>
   <p align="center">高效作业批改工具，为教师节省宝贵时间</p>
+  <p align="center"><a href='https://github.com/shuaiqiyy/homework-killer-for-phone'>前往移动端的GitHub仓库</a></p>
 </p>
 
 <p align="center">

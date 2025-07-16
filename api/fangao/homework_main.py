@@ -10,6 +10,55 @@ file_path = Path.cwd() / 'api' / 'fangao' / 'fangao_api.json'
 with file_path.open('r', encoding='utf-8') as file:
     data_json = json.load(file)
 
+file_path_uid = Path.cwd() / 'user.json'
+with file_path_uid.open('r', encoding='utf-8') as file:
+    data_json_uid = json.load(file)
+    uid = data_json_uid['user_uid']
+
+
+def convert_to_target_format(data):
+    # 创建数据副本以避免修改原始数据
+    converted = data.copy()
+    
+    # 处理answer_content中的每个条目
+    if 'answer' in converted and 'answer_content' in converted['answer']:
+        converted['answer'] = converted['answer'].copy()
+        converted['answer']['answer_content'] = [
+            {**item, 
+                # 确保mid和hid是字符串类型
+                'mid': str(item['mid']), 
+                'hid': str(item['hid'])}
+            for item in converted['answer']['answer_content']
+        ]
+    
+    # 确保checker_end是整数类型
+    if 'checker_end' in converted:
+        converted['checker_end'] = int(converted['checker_end'])
+    
+    # 转换为格式化的JSON字符串
+    return json.dumps(converted, indent=4)
+
+def convert_to_target_format(data):
+    # 创建数据副本
+    converted = data.copy()
+    
+    # 处理answer_content中的条目
+    if 'answer' in converted and 'answer_content' in converted['answer']:
+        converted['answer'] = converted['answer'].copy()
+        converted['answer']['answer_content'] = [
+            {**item, 
+                'mid': str(item['mid']), 
+                'hid': str(item['hid'])}
+            for item in converted['answer']['answer_content']
+        ]
+    
+    # 转换checker_end为整数
+    if 'checker_end' in converted:
+        converted['checker_end'] = int(converted['checker_end'])
+    
+    # 直接返回字典对象，而不是字符串
+    return converted
+
 def delete_files_in_directory(directory):
     for filename in os.listdir(directory):
         file_path = os.path.join(directory, filename)
@@ -36,7 +85,7 @@ def homework_informance(token,taskid,sid,user_id):
         if da_home['question_type'] == 1:
             said = da_home['said']
             file_path_sub = Path.cwd() / 'api' / 'fangao' / 'sumbit' / '{said}.json'.format(said=said)
-            with file_path_sub.open('r', encoding='utf-8') as file:
+            with file_path_sub.open('w', encoding='utf-8') as file:
                 json.dump(da_home, file, ensure_ascii=False, indent=4)
             hight_grades.append(da_home['question_score'])
             teaid.append(said)
@@ -63,9 +112,24 @@ def homework_work(token, teaid, sid, taskid, hight, grades):
     }
     checker_end = int(time.time())
     data_sumbit = {
-        'request': '{{"mid": "{mid}","hid":"{teaid}","student_mid": "{sid}","score": {score},"answer": {answer},"checker_start":"{checker_start}","checker_end" :"{checker_end}"}}'.format(mid=str(sumbit_list[0]['mid']), teaid=str(teaid), sid=str(sid), score=score, answer=answer,checker_start=checker_start, checker_end=checker_end)
+        'request': '{{"mid": "{mid}","hid":"{teaid}","student_mid": "{sid}","score": {score},"answer": {answer},"checker_start":"{checker_start}","checker_end" :"{checker_end}"}}'.format(
+            mid=str(uid), teaid=str(teaid), sid=str(sid), score=score, answer=str(answer),checker_start=checker_start, checker_end=checker_end)
     }
-    r_homework_work = requests.post(url=homweork_informance_url, data=data_sumbit, headers=headers, verify=False)
-    print(r_homework_work.text)
+    input_data_r = convert_to_target_format(data_sumbit)
+    request_str = input_data_r["request"]
+    fixed_request_str = request_str.replace("'", "\"")
+    request_data = json.loads(fixed_request_str)
+    converted_data = convert_to_target_format(request_data)
+    final_output = json.dumps(converted_data, indent=4)
+    input_data = {
+        'request': final_output
+    }
+    r_homework_work = requests.post(url=homweork_informance_url, data=input_data, headers=headers, verify=False)
     directory_path = Path.cwd() / 'api' / 'fangao' / 'sumbit' 
     delete_files_in_directory(directory_path)
+    da_homework_work = json.loads(r_homework_work.text)
+    msg = da_homework_work['msg ']
+    if msg == '请求成功"':
+        return 0
+    else:
+        return 6
