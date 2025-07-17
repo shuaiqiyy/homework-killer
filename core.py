@@ -87,8 +87,6 @@ class HomeworkManager:
         # 检查返回结果
         if code != 0:
             error_msg = f"获取学生列表失败 (错误码: {code})"
-            if msgs:  # 如果有错误消息
-                error_msg += f": {msgs}"
             print(f"[ERROR] {error_msg}")
             return False
 

@@ -5,6 +5,17 @@ import api.xiaoxin.xiaoxin_api as xiaoxin
 import api.fangao.homework_main as homework_fangao
 import api.xiaoxin.homework_main as homework_xiaoxin
 
+def student_list(student_list_name_liat,student_list_id_list,student_list_msg_list):
+    names = []
+    ids = []
+    msgs_ = []
+    for name, sid,msgs in zip(student_list_name_liat,student_list_id_list,student_list_msg_list):
+        if msgs == "待批改":
+            names.append(name)
+            ids.append(sid)
+            msgs_.append(msgs)
+    return names,ids,msgs_
+
 def api_choose():
     path_api = Path.cwd() / 'api'
     api_list = []
@@ -45,9 +56,13 @@ def api_homework_list_informance(token, uid, class_id, subject_id, api):
 
 def api_student_list_iformance(token, uid, hid, class_id, api):
     if api == 'fangao':
-        return fangao.student_list_iformance(token, uid, hid, class_id)
+        code,student_list_name_liat,student_list_id_list,student_list_msg_list = fangao.student_list_iformance(token, uid, hid, class_id)
+        name_list,id_list,msg_list = student_list(student_list_name_liat,student_list_id_list,student_list_msg_list)
+        return code,name_list,id_list,msg_list
     elif api == 'xiaoxin':
-        return xiaoxin.student_list_iformance(token, uid, hid, class_id)
+        code,student_list_name_liat,student_list_id_list,student_list_msg_list = xiaoxin.student_list_iformance(token, uid, hid, class_id)
+        name_list,id_list,msg_list = student_list(student_list_name_liat,student_list_id_list,student_list_msg_list)
+        return code,name_list,id_list,msg_list
     else:
         code = 5
         student_list_name_list = student_list_id_list = None

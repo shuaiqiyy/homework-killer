@@ -71,7 +71,11 @@ def homework_informance(token,taskid,sid,user_id):
     return hight_grades,homwerk_img,teaid
 
 def homework_work(token, teaid, sid, taskid, hight, grades):
-    checker_start = int(time.time())
+    checker_start = int(time.time() * 1000)
+    file_path_uid = Path.cwd() / 'user.json'
+    with file_path_uid.open('r', encoding='utf-8') as file:
+        data_json_uid = json.load(file)
+        uid = data_json_uid['user_uid']
     headers = {
         'token': token
     }
@@ -86,14 +90,16 @@ def homework_work(token, teaid, sid, taskid, hight, grades):
         sumbit_json['score'] = str(grade)
         sumbit_list.append(sumbit_json)
     score = max(grades)
+    homework_work_change_url = data_json['url_change']
+    change_data = {
+        'request': '{{"mid": "{uid}","hid":"{hid}","student_mid":{mid},"type":1}}'.format(
+            uid=str(uid), hid=str(teaid), mid=int(sid))
+    }
+    r_change = requests.post(url=homework_work_change_url, data=change_data, headers=headers, verify=False)
     answer = {
         "answer_content": sumbit_list,"teacher_comment": ""
     }
-    checker_end = int(time.time())
-    file_path_uid = Path.cwd() / 'user.json'
-    with file_path_uid.open('r', encoding='utf-8') as file:
-        data_json_uid = json.load(file)
-        uid = data_json_uid['user_uid']
+    checker_end = int(time.time() * 1000)
     data_sumbit = {
         'request': '{{"mid": "{mid}","hid":"{teaid}","student_mid": "{sid}","score": {score},"answer": {answer},"checker_start":"{checker_start}","checker_end" :"{checker_end}"}}'.format(
             mid=str(uid), teaid=str(teaid), sid=str(sid), score=0, answer=str(answer),checker_start=checker_start, checker_end=checker_end)
@@ -104,6 +110,7 @@ def homework_work(token, teaid, sid, taskid, hight, grades):
     request_data = json.loads(fixed_request_str)
     converted_data = convert_to_target_format(request_data)
     final_output = json.dumps(converted_data, indent=4)
+    final_output = str(final_output)
     input_data = {
         'request': final_output
     }
@@ -111,8 +118,9 @@ def homework_work(token, teaid, sid, taskid, hight, grades):
     directory_path = Path.cwd() / 'api' / 'fangao' / 'sumbit' 
     delete_files_in_directory(directory_path)
     da_homework_work = json.loads(r_homework_work.text)
-    msg = da_homework_work['msg ']
-    if msg == '请求成功"':
+    msg = da_homework_work['msg']
+    if msg == "请求成功":
+        print(0)
         return 0
     else:
         return 6

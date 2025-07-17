@@ -5,5 +5,5 @@
     "url_student_list": "https://api.homework.100eks.com/teacher.homework.student",
     "url_homework": "https://api.homework.100eks.com/teacher.homework.assessmentAnswer",
     "url_homework_work": "https://api.homework.100eks.com/teacher.homework.submitSubjectItem",
-    "url_time": "https://api.homework.100eks.com/teacher.homework.changeAssessment"
+    "url_change": "https://api.homework.100eks.com/teacher.homework.changeAssessment"
 }
