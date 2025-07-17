@@ -120,6 +120,6 @@ def homework_work(token, teaid, sid, taskid, hight, grades):
     da_homework_work = json.loads(r_homework_work.text)
     msg = da_homework_work['msg']
     if msg == "请求成功":
-        return 0
+        return True
     else:
         return 6
