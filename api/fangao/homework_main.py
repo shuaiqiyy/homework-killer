@@ -11,46 +11,31 @@ with file_path.open('r', encoding='utf-8') as file:
     data_json = json.load(file)
 
 def convert_to_target_format(data):
-    # 创建数据副本以避免修改原始数据
     converted = data.copy()
-    
-    # 处理answer_content中的每个条目
     if 'answer' in converted and 'answer_content' in converted['answer']:
         converted['answer'] = converted['answer'].copy()
         converted['answer']['answer_content'] = [
             {**item, 
-                # 确保mid和hid是字符串类型
-                'mid': str(item['mid']), 
-                'hid': str(item['hid'])}
+                'mid': int(item['mid']), 
+                'hid': int(item['hid'])}
             for item in converted['answer']['answer_content']
         ]
-    
-    # 确保checker_end是整数类型
     if 'checker_end' in converted:
         converted['checker_end'] = int(converted['checker_end'])
-    
-    # 转换为格式化的JSON字符串
     return json.dumps(converted, indent=4)
 
 def convert_to_target_format(data):
-    # 创建数据副本
     converted = data.copy()
-    
-    # 处理answer_content中的条目
     if 'answer' in converted and 'answer_content' in converted['answer']:
         converted['answer'] = converted['answer'].copy()
         converted['answer']['answer_content'] = [
             {**item, 
-                'mid': str(item['mid']), 
-                'hid': str(item['hid'])}
+                'mid': int(item['mid']), 
+                'hid': int(item['hid'])}
             for item in converted['answer']['answer_content']
         ]
-    
-    # 转换checker_end为整数
     if 'checker_end' in converted:
         converted['checker_end'] = int(converted['checker_end'])
-    
-    # 直接返回字典对象，而不是字符串
     return converted
 
 def delete_files_in_directory(directory):
@@ -111,7 +96,7 @@ def homework_work(token, teaid, sid, taskid, hight, grades):
         uid = data_json_uid['user_uid']
     data_sumbit = {
         'request': '{{"mid": "{mid}","hid":"{teaid}","student_mid": "{sid}","score": {score},"answer": {answer},"checker_start":"{checker_start}","checker_end" :"{checker_end}"}}'.format(
-            mid=str(uid), teaid=str(teaid), sid=str(sid), score=score, answer=str(answer),checker_start=checker_start, checker_end=checker_end)
+            mid=str(uid), teaid=str(teaid), sid=str(sid), score=0, answer=str(answer),checker_start=checker_start, checker_end=checker_end)
     }
     input_data_r = convert_to_target_format(data_sumbit)
     request_str = input_data_r["request"]
