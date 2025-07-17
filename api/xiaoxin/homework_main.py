@@ -49,7 +49,7 @@ def homework_work(token,taskid,sid,teaid,hight,grades):
     r_homework_work = requests.post(url_homework_work,data=data_homework_work,headers=headers, verify=False)
     da_homework_work = json.loads(r_homework_work.text)
     msg = da_homework_work['state']
-    if msg == '提交成功':
+    if msg == "ok":
         return True
     else:
-        return 6
+        return 0

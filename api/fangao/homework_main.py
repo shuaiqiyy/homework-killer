@@ -122,4 +122,4 @@ def homework_work(token, teaid, sid, taskid, hight, grades):
     if msg == "请求成功":
         return True
     else:
-        return 6
+        return 0
